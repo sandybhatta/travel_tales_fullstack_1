@@ -56,6 +56,12 @@ const userSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+    closeFriends: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     // saved post for the user
     bookmarks: [
         {
