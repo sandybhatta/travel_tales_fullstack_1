@@ -126,6 +126,16 @@ userSchema.pre("save", async function (next) {
   userSchema.methods.comparePassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
   };
+
+
+  // for notifications
+  User.virtual("unreadNotificationCount", {
+    ref: "Notification",
+    localField: "_id",
+    foreignField: "recipient",
+    match: { isRead: false },
+    count: true,
+  });
   
 const User = mongoose.model("User", userSchema);
 

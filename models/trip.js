@@ -19,9 +19,10 @@ const tripSchema = new mongoose.Schema(
       maxlength: 1000,
     },
     coverPhoto: {
-      public_id: String,
-      url: String,
-    },
+        public_id: { type: String, trim: true },
+        url: { type: String, trim: true },
+      },
+      
     startDate: {
       type: Date,
       required: true,
@@ -59,11 +60,12 @@ const tripSchema = new mongoose.Schema(
       },
     ],
     acceptedFriends: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+        {
+          user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+          acceptedAt: { type: Date, default: Date.now },
+        }
+      ]
+      
   },
   {
     timestamps: true,
@@ -93,50 +95,21 @@ tripSchema.virtual("durationText").get(function () {
   });
   
 
-// is the trip ended in past
-tripSchema.virtual("isPast").get(function () {
-    if (!this.endDate) return false;
-  
+// what is the trip status
+tripSchema.virtual("tripStatus").get(function () {
     const today = new Date();
-    // Remove time portion for date-only comparison
     today.setHours(0, 0, 0, 0);
   
-    const tripEndDate = new Date(this.endDate);
-    tripEndDate.setHours(0, 0, 0, 0);
+    const start = new Date(this.startDate);
+    const end = new Date(this.endDate);
+    start.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
   
-    return tripEndDate < today;
+    if (end < today) return "past";
+    if (start > today) return "upcoming";
+    return "ongoing";
   });
-
-// is the trip ongoing
-tripSchema.virtual("isOngoing").get(function () {
-    if (!this.startDate || !this.endDate) return false;
   
-    const today = new Date();
-    // Remove time portion for date-only comparison
-    today.setHours(0, 0, 0, 0);
-  
-    const tripStartDate = new Date(this.startDate);
-    tripStartDate.setHours(0, 0, 0, 0);
-  
-    const tripEndDate = new Date(this.endDate);
-    tripEndDate.setHours(0, 0, 0, 0);
-  
-    return tripStartDate <= today && tripEndDate >= today;
-  });
-
-  //is the trip upcoming
-tripSchema.virtual("isUpcoming").get(function () {
-    if (!this.startDate) return false;
-  
-    const today = new Date();
-    // Remove time portion for date-only comparison
-    today.setHours(0, 0, 0, 0);
-  
-    const tripStartDate = new Date(this.startDate);
-    tripStartDate.setHours(0, 0, 0, 0);
-  
-    return tripStartDate > today;
-  });
 
 //   post count
 tripSchema.virtual("postCount").get(function () {
@@ -231,7 +204,66 @@ tripSchema.methods.canPost = function (user) {
     );
   };
   
+// to add post safely in trip
+tripSchema.methods.addPost = async function (postId) {
+    if (!postId) throw new Error("Post ID is required");
+  
+    const exists = this.posts.some(
+      (id) => id.toString() === postId.toString()
+    );
+  
+    if (!exists) {
+      this.posts.push(postId);
+      await this.save();
+    }
+  
+    return this;
+  };
+// to add a friend in invited
+tripSchema.methods.inviteFriend = async function (userId) {
+    if (!userId) throw new Error("User ID is required");
+  
+    const isAlreadyInvited = this.invitedFriends.some(
+      (id) => id.toString() === userId.toString()
+    );
+    const isAlreadyAccepted = this.acceptedFriends.some(
+      (id) => id.toString() === userId.toString()
+    );
+  
+    if (!isAlreadyInvited && !isAlreadyAccepted) {
+      this.invitedFriends.push(userId);
+      await this.save();
+    }
+  
+    return this;
+  };
 
+  // to accept a trip invitation and remove from invitedFriends
+  tripSchema.methods.acceptInvitation = async function (userId) {
+    if (!userId) throw new Error("User ID is required");
+  
+    const wasInvited = this.invitedFriends.some(
+      (id) => id.toString() === userId.toString()
+    );
+    const alreadyAccepted = this.acceptedFriends.some(
+      (id) => id.toString() === userId.toString()
+    );
+  
+    if (wasInvited && !alreadyAccepted) {
+      // Remove from invitedFriends
+      this.invitedFriends = this.invitedFriends.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+  
+      // Add to acceptedFriends
+      this.acceptedFriends.push(userId);
+  
+      await this.save();
+    }
+  
+    return this;
+  };
+  
 
   // now static nmethods
 
@@ -283,6 +315,68 @@ tripSchema.statics.getCollaboratedTrips = async function (userId) {
       acceptedFriends: userId,
     }).sort({ createdAt: -1 });
   };
+
+
+// get a specific trip with post details
+tripSchema.statics.getTripWithPosts = async function (tripId) {
+    if (!tripId) throw new Error("Trip ID is required");
+  
+    return this.findById(tripId)
+      .select("-__v") // Optional: remove unwanted internal fields
+      .populate({
+        path: "posts",
+        options: { sort: { createdAt: -1 } }, // Sort posts newest first
+        populate: [
+          {
+            path: "author",
+            select: "name username avatar", // Show post author info
+          },
+          {
+            path: "comments",
+            select: "_id", // To show comment count if needed
+          },
+        ],
+      })
+      .lean(); // Return plain JS object (faster, lightweight)
+  };
+
+// get users who have upcoming trip
+tripSchema.statics.getUpcomingTrips = async function (userId) {
+    if (!userId) throw new Error("User ID is required");
+  
+    const today = new Date();
+  
+    return this.find({
+      user: userId,
+      startDate: { $gt: today },
+    }).sort({ startDate: 1 }).lean();
+  };
+// users who is having ongoing trip
+tripSchema.statics.getOngoingTrips = async function (userId) {
+    if (!userId) throw new Error("User ID is required");
+  
+    const today = new Date();
+  
+    return this.find({
+      user: userId,
+      startDate: { $lte: today },
+      endDate: { $gte: today },
+    }).sort({ startDate: 1 }).lean();
+  };
+  
+  //users who have completed their trips
+tripSchema.statics.getPastTrips = async function (userId) {
+    if (!userId) throw new Error("User ID is required");
+  
+    const today = new Date();
+  
+    return this.find({
+      user: userId,
+      endDate: { $lt: today },
+    }).sort({ endDate: -1 }).lean();
+  };
+
+  
 
 const Trip= mongoose.model("Trip", tripSchema);
 export default Trip;
