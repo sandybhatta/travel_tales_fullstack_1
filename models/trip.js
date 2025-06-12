@@ -181,7 +181,7 @@ tripSchema.methods.isFriendAccepted = function (userId) {
   
   
 
-  
+
 // who can view 
 tripSchema.methods.canView = async function (user) {
     // If public, anyone can view
@@ -231,5 +231,58 @@ tripSchema.methods.canPost = function (user) {
     );
   };
   
+
+
+  // now static nmethods
+
+//   find trips by user
+tripSchema.statics.getUserTrips = async function (userId) {
+    if (!userId) throw new Error("User ID is required");
+  
+    return this.find({ user: userId }).sort({ createdAt: -1 });
+  };
+
+
+  // getting visisble trips for user
+  tripSchema.statics.getVisibleTripsForUser = async function (userId) {
+    if (!userId) throw new Error("User ID is required");
+  
+    const User = mongoose.model("User");
+  
+    // Fetch current user to get their following list
+    const currentUser = await User.findById(userId)
+      .select("following")
+      .lean();
+  
+    const followingIds = currentUser?.following?.map((f) => f.toString()) || [];
+  
+    // Fetch all users who added this user to their closeFriends
+    const closeFriendsOf = await User.find({
+      closeFriends: userId,
+    }).select("_id").lean();
+  
+    const closeFriendIds = closeFriendsOf.map(u => u._id.toString());
+  
+    return this.find({
+      $or: [
+        { user: userId }, // own trips
+        { visibility: "public" },
+        { visibility: "followers", user: { $in: followingIds } },
+        { visibility: "close_friends", user: { $in: closeFriendIds } },
+      ],
+    }).sort({ createdAt: -1 });
+  };
+ 
+  
+
+//   static method for getting collaborated trips
+tripSchema.statics.getCollaboratedTrips = async function (userId) {
+    if (!userId) throw new Error("User ID is required");
+  
+    return this.find({
+      acceptedFriends: userId,
+    }).sort({ createdAt: -1 });
+  };
+
 const Trip= mongoose.model("Trip", tripSchema);
 export default Trip;
