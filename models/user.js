@@ -107,6 +107,13 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
+
+    // Store a *hashed* token so the raw value never lives in DB
+    emailVerifyToken: String,
+
+    // Optional expiry (ISO date). TTL index removes stale docs automatically.
+    emailVerifyTokenExpires: Date,
     isBanned: {
       type: Boolean,
       default: false,
@@ -129,13 +136,23 @@ userSchema.pre("save", async function (next) {
 
 
   // for notifications
-  User.virtual("unreadNotificationCount", {
-    ref: "Notification",
-    localField: "_id",
-    foreignField: "recipient",
-    match: { isRead: false },
-    count: true,
-  });
+ /**
+ * Generates a random raw token, hashes & stores it,
+ * sets expiry, and returns the raw token for e-mailing.
+ */
+userSchema.methods.createEmailVerificationToken = function () {
+  const rawToken = crypto.randomBytes(32).toString("hex"); // 64-char string
+  this.emailVerifyToken = crypto
+    .createHash("sha256")
+    .update(rawToken)
+    .digest("hex");
+
+  // 24-hour lifetime (adjust to taste)
+  this.emailVerifyTokenExpires = Date.now() + 24 * 60 * 60 * 1000;
+
+  return rawToken;
+};
+
   
 const User = mongoose.model("User", userSchema);
 
