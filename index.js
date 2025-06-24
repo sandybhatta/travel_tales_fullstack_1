@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { connectDb } from "./config/db.js";
-import authRoutes from "./routes/authroutes.js"
+// import authRoutes from "./routes/authroutes.js"
 // import nodemailer from "nodemailer"
 dotenv.config();
 
@@ -59,7 +59,6 @@ app.get("/", (req, res) => {
 // }
 
 // })
-
 
 
 

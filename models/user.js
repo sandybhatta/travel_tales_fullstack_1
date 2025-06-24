@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import crypto from "crypto";
 
 const userSchema = new mongoose.Schema(
   {
@@ -147,8 +148,8 @@ userSchema.methods.createEmailVerificationToken = function () {
     .update(rawToken)
     .digest("hex");
 
-  // 24-hour lifetime (adjust to taste)
-  this.emailVerifyTokenExpires = Date.now() + 24 * 60 * 60 * 1000;
+  // 30 min lifetime (adjust to taste)
+  this.emailVerifyTokenExpires = Date.now() + 30 * 60 * 1000;
 
   return rawToken;
 };

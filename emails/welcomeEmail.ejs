@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Welcome to TravelTales!</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+    .container {
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .header {
+      background-color: #1e90ff;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      border-radius: 6px 6px 0 0;
+    }
+    .content {
+      padding: 20px;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.9em;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>Welcome to TravelTales, <%= username %>!</h2>
+    </div>
+    <div class="content">
+      <p>We're thrilled to have you onboard 🚀</p>
+      <p>Start creating unforgettable travel experiences, share stories, and connect with fellow adventurers!</p>
+      <p>Visit your profile and explore:</p>
+      <ul>
+        <li>📸 Post your first travel story</li>
+        <li>🌍 Plan a trip and invite friends</li>
+        <li>🎖️ Earn badges and XP as you explore!</li>
+      </ul>
+      <p>If you have any questions, feel free to reply to this email. We're here to help!</p>
+    </div>
+    <div class="footer">
+      &copy; <%= new Date().getFullYear() %> TravelTales. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>
