@@ -7,6 +7,7 @@ import {
   getUserInfo
 } from "../controllers/authController.js";
 
+import {verifyOtpLogin} from "../controllers/verifyOTPLogin.js";
 
 import {verifyEmail} from "../controllers/verificationEmailApi.js"
 
@@ -46,6 +47,10 @@ resendVerification)
 
 
 router.post("/login", loginuser);       // + validateLogin
+router.post("/otp-login",[
+  body("otp").isLength({ min: 6, max:6 }).withMessage("OTP must be 6 digits")], 
+  
+  verifyOtpLogin); // OTP login
 router.post("/logout", protect, logoutuser);
 router.post("/refresh", refresh);
 router.get("/me", protect, getUserInfo);

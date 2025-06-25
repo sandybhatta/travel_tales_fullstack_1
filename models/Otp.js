@@ -24,7 +24,7 @@ const otpTokenSchema = new mongoose.Schema(
     expiresAt: {
       type: Date,
       required: true,
-      index: { expires: 0 }, // Auto-delete expired docs using TTL
+      
     },
 
     used: {
@@ -36,6 +36,12 @@ const otpTokenSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+
+// ttl indexing
+otpTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }); 
+
+
 
 // 🔐 Instance method to validate OTP
 otpTokenSchema.methods.isValidOtp = function (enteredOtp) {
@@ -70,5 +76,5 @@ otpTokenSchema.statics.generateOtpForUser = async function (userId, type) {
   return rawOtp;
 };
 
-const OtpToken = mongoose.model("OtpToken", otpTokenSchema);
-export default OtpToken;
+const OTP = mongoose.model("OtpToken", otpTokenSchema);
+export default OTP;

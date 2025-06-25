@@ -1,7 +1,8 @@
 import { validationResult } from "express-validator";
 import User from "../models/User.js";
 import { sendEmail } from "../utils/transportEmail.js"; 
-
+import { sendOTPEmail } from "../utils/sendOTPemail.js";
+import  OtpToken from "../models/Otp.js";
 
 // importing token function of both refresh and access
 
@@ -70,12 +71,21 @@ export const registerUser = async (req, res) => {
 
 
 export const loginuser =async (req,res)=>{
+
+// Step 1: Validate input
 const{email,password}=req.body
 
 if(!email || !password){
     return res.status(400).send({message:"provide email and password both"})
 }
 
+
+
+
+
+try{
+
+// Check if user exists and is verified
 const user=await User.findOne({email}).select("+password")
 
 if(!user){
@@ -93,34 +103,35 @@ if(user.isBanned){
 }
 
 
-try{
-    const refreshToken = await getRefreshToken(user._id);
-    const accessToken = getAccessToken(user._id);
+    // const refreshToken = await getRefreshToken(user._id);
+    // const accessToken = getAccessToken(user._id);
     
-    user.lastLogin=Date.now()
-    await user.save({ validateBeforeSave: false });
+    // user.lastLogin=Date.now()
+    // await user.save({ validateBeforeSave: false });
+
+
+
     
     // secure in cookie means that the cookie 
     // will only be sent over HTTPS connections
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Set to true in production with HTTPS
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    } // 7 days
-    )
+
+
+    // res.cookie("refreshToken", refreshToken, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production", // Set to true in production with HTTPS
+    //   sameSite: "none",
+    //   maxAge: 7 * 24 * 60 * 60 * 1000,
+    // } // 7 days
+    // )
+
     
+    //static method to generate OTP
+    
+    const otp= await OtpToken.generateOtpForUser(user._id, "login"); 
+    await sendOTPEmail(user.email, user.username,otp);
     res.status(200).json({
-      message: "Login successful",
-      accessToken,
-      user: {
-        id: user._id,
-        email: user.email,
-        username: user.username,
-        location: user.location,
-        isVerified: user.isVerified,
-        isBanned: user.isBanned,
-      },
+      message: "verify the otp sent to your email",
+      user: user._id
     })
 
 }catch(error){
