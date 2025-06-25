@@ -23,7 +23,7 @@ import { protect } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 
-
+// 1 for registering user
 //for registering user
 router.post("/register",[
   body("email").isEmail().withMessage("Please enter a valid email address"),
@@ -45,12 +45,14 @@ body("email").isEmail().withMessage("Please enter a valid email address"),
 resendVerification)
 
 
-
+//2 for logging in user
 router.post("/login", loginuser);       // + validateLogin
 router.post("/otp-login",[
   body("otp").isLength({ min: 6, max:6 }).withMessage("OTP must be 6 digits")], 
-  
+
   verifyOtpLogin); // OTP login
+router.post("/resend-otp")
+
 router.post("/logout", protect, logoutuser);
 router.post("/refresh", refresh);
 router.get("/me", protect, getUserInfo);
