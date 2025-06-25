@@ -3,6 +3,10 @@ import User from "../models/User.js";
 import { sendEmail } from "../utils/transportEmail.js"; 
 
 
+// importing token function of both refresh and access
+
+import { getRefreshToken, getAccessToken } from "../utils/tokenCreate.js";
+
 
 export const registerUser = async (req, res) => {
   // Step 1: Validate incoming request body
@@ -63,3 +67,74 @@ export const registerUser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
+
+export const loginuser =async (req,res)=>{
+const{email,password}=req.body
+
+if(!email || !password){
+    return res.status(400).send({message:"provide email and password both"})
+}
+
+const user=await User.findOne({email}).select("+password")
+
+if(!user){
+    return res.status(400).send({message:"Invalid credentials"})
+}
+const match = await user.comparePassword(password)
+if(!match){
+    return res.status(400).send({message:"Invalid credentials"})
+}
+if(!user.isVerified){
+    return res.status(403).send({message:"Please verify your email before logging in."});
+}
+if(user.isBanned){
+    return res.status(403).send({message:"You are banned from this platform."});
+}
+
+
+try{
+    const refreshToken = await getRefreshToken(user._id);
+    const accessToken = getAccessToken(user._id);
+    
+    user.lastLogin=Date.now()
+    await user.save({ validateBeforeSave: false });
+    
+    // secure in cookie means that the cookie 
+    // will only be sent over HTTPS connections
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Set to true in production with HTTPS
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    } // 7 days
+    )
+    
+    res.status(200).json({
+      message: "Login successful",
+      accessToken,
+      user: {
+        id: user._id,
+        email: user.email,
+        username: user.username,
+        location: user.location,
+        isVerified: user.isVerified,
+        isBanned: user.isBanned,
+      },
+    })
+
+}catch(error){
+    console.error("Login Error:", error);
+    return res.status(500).send({message:"Server error"})
+}
+
+
+
+
+
+
+
+
+
+
+}

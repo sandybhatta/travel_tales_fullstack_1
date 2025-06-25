@@ -39,7 +39,9 @@ router.post("/register",[
 router.post("/verify-email",verifyEmail)
 
 //for resend verification email
-router.post("/resend-verification",body("email").isEmail().withMessage("Please enter a valid email address"),resendVerification)
+router.post("/resend-verification",
+body("email").isEmail().withMessage("Please enter a valid email address"),
+resendVerification)
 
 
 

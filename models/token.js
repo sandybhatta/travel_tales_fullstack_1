@@ -24,4 +24,5 @@ const tokenSchema = new mongoose.Schema({
 // TTL index for auto-expiry
 tokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
-module.exports = mongoose.model('Token', tokenSchema);
+const Token = mongoose.model('Token', tokenSchema);
+export default Token;
