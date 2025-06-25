@@ -27,7 +27,7 @@ export const registerUser = async (req, res) => {
       await existingEmail.save(); // Save updated token
       await sendEmail(email, username, rawToken);
       return res
-        .status(400)
+        .status(200)
         .json({ message: "Please verify your email. A new link has been sent." });
     }
 
