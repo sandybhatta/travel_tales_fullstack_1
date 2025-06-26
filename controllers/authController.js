@@ -4,6 +4,7 @@ import { sendEmail } from "../utils/transportEmail.js";
 import { sendOTPEmail } from "../utils/sendOTPemail.js";
 import  OtpToken from "../models/Otp.js";
 import {verifyToken} from "../utils/tokenCreate.js"
+import Token from "../models/token.js"
 import dotenv from "dotenv"
 dotenv.config()
 // importing token function of both refresh and access
@@ -127,7 +128,7 @@ export const refresh=async(req,res)=>{
 
   // extracted the old token from cookies
   const oldToken = req.cookies.refreshToken;
-  
+
   if (!oldToken) {
     return res.status(401).json({ message: "No refresh token found." });
   }
@@ -171,3 +172,25 @@ export const refresh=async(req,res)=>{
 
 
 }
+
+
+
+
+
+export const logoutuser = async (req, res) => {
+  try {
+    // Delete refresh token from DB
+    await Token.deleteMany({ userId: req.user._id });
+
+    // Clear the refresh token cookie
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+    });
+
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error while logging out" });
+  }
+};

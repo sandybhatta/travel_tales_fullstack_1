@@ -46,6 +46,8 @@ body("email").isEmail().withMessage("Please enter a valid email address"),
 resendVerification)
 
 
+
+
 //2 for logging in user
 router.post("/login", loginuser);       // + validateLogin
 router.post("/otp-login",[
@@ -56,8 +58,13 @@ router.post("/resend-otp", resendOtp)
 
 
 
-router.post("/logout", protect, logoutuser);
+
+// 3. refresh route for token rotation
 router.post("/refresh", refresh);
+
+
+router.post("/logout", protect, logoutuser);
+
 router.get("/me", protect, getUserInfo);
 
 export default router;
