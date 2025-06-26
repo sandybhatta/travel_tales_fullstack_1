@@ -35,3 +35,10 @@ export const getAccessToken=(userId)=>{
         { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
     );
 }
+
+export const verifyToken=(token,secret)=>{
+    // now will retrun is the jwt verified
+
+    return jwt.verify(token,secret)
+
+}

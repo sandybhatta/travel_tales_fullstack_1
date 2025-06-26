@@ -3,7 +3,9 @@ import User from "../models/User.js";
 import { sendEmail } from "../utils/transportEmail.js"; 
 import { sendOTPEmail } from "../utils/sendOTPemail.js";
 import  OtpToken from "../models/Otp.js";
-
+import {verifyToken} from "../utils/tokenCreate.js"
+import dotenv from "dotenv"
+dotenv.config()
 // importing token function of both refresh and access
 
 import { getRefreshToken, getAccessToken } from "../utils/tokenCreate.js";
@@ -101,31 +103,6 @@ if(!user.isVerified){
 if(user.isBanned){
     return res.status(403).send({message:"You are banned from this platform."});
 }
-
-
-    // const refreshToken = await getRefreshToken(user._id);
-    // const accessToken = getAccessToken(user._id);
-    
-    // user.lastLogin=Date.now()
-    // await user.save({ validateBeforeSave: false });
-
-
-
-    
-    // secure in cookie means that the cookie 
-    // will only be sent over HTTPS connections
-
-
-    // res.cookie("refreshToken", refreshToken, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === "production", // Set to true in production with HTTPS
-    //   sameSite: "none",
-    //   maxAge: 7 * 24 * 60 * 60 * 1000,
-    // } // 7 days
-    // )
-
-    
-    //static method to generate OTP
     
     const otp= await OtpToken.generateOtpForUser(user._id, "login"); 
     await sendOTPEmail(user.email, user.username,otp);
@@ -140,12 +117,57 @@ if(user.isBanned){
 }
 
 
+}
 
 
 
 
 
+export const refresh=async(req,res)=>{
 
+  // extracted the old token from cookies
+  const oldToken = req.cookies.refreshToken;
+  
+  if (!oldToken) {
+    return res.status(401).json({ message: "No refresh token found." });
+  }
+
+  try{
+
+
+    const payload = verifyToken(oldToken, process.env.JWT_REFRESH_SECRET);
+
+  
+    const existingToken = await Token.findOne({ token: oldToken });
+    
+    if (!existingToken) {
+      await Token.deleteMany({ userId: payload.userId });
+      return res.status(403).json({ message: 'Token reuse detected. Re-login required.' });
+    }
+    
+    // Remove old token, issue new one
+    await existingToken.deleteOne();
+    const newAccessToken = getAccessToken(payload.userId);
+    const newRefreshToken =  await getRefreshToken(payload.userId);
+    
+    
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+  
+  
+    res.json({ accessToken: newAccessToken });
+
+  }catch(error){
+    console.error("Error in /refresh route:", error.message);
+  return res.status(401).json({ message: "Invalid or expired token." });
+  }
+
+  
+  
 
 
 }

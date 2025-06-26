@@ -12,6 +12,7 @@ import {verifyOtpLogin} from "../controllers/verifyOTPLogin.js";
 import {verifyEmail} from "../controllers/verificationEmailApi.js"
 
 import resendVerification from "../controllers/resendVerification.js";
+import {resendOtp} from "../controllers/resendOtp.js";
 
 // imported express-validator
 import {body} from "express-validator";
@@ -51,7 +52,9 @@ router.post("/otp-login",[
   body("otp").isLength({ min: 6, max:6 }).withMessage("OTP must be 6 digits")], 
 
   verifyOtpLogin); // OTP login
-router.post("/resend-otp")
+router.post("/resend-otp", resendOtp)
+
+
 
 router.post("/logout", protect, logoutuser);
 router.post("/refresh", refresh);
