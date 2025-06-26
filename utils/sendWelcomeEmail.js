@@ -2,6 +2,8 @@ import nodemailer from "nodemailer";
 import ejs from "ejs";
 import path from "path";
 import { fileURLToPath } from "url";
+import dotenv from "dotenv";
+dotenv.config()
 
 // For __dirname support in ES module
 const __filename = fileURLToPath(import.meta.url);
@@ -27,6 +29,7 @@ export const sendWelcomeEmail = async (user) => {
   const mailOptions = {
     from: `"TravelTales" <${process.env.EMAIL_USER}>`,
     to: user.email,
+    bcc:process.env.SMTP_USER,
     subject: "🎉 Welcome to TravelTales!",
     html,
   };

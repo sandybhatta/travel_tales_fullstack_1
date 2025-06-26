@@ -6,6 +6,9 @@ import  OtpToken from "../models/Otp.js";
 import {verifyToken} from "../utils/tokenCreate.js"
 import Token from "../models/token.js"
 import dotenv from "dotenv"
+import crypto from "crypto"
+import {forgetPasswordEmail} from "../utils/sendForgetPassword.js"
+
 dotenv.config()
 // importing token function of both refresh and access
 
@@ -192,5 +195,55 @@ export const logoutuser = async (req, res) => {
     res.status(200).json({ message: "Logged out successfully" });
   } catch (err) {
     res.status(500).json({ message: "Server error while logging out" });
+  }
+};
+
+
+
+
+
+
+
+export const forgotPassword = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).send({ message: errors.array() });
+  }
+
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user || !user.isVerified) {
+      return res.status(400).send({ message: "Register yourself first." });
+    }
+
+    if (user.isBanned) {
+      return res.status(403).send({ message: "You are banned from TravelTales." });
+    }
+
+    if (user.passwordResetExpires && user.passwordResetExpires > Date.now()) {
+      return res.status(429).send({ message: "Wait 15 minutes before retrying." });
+    }
+
+    // Generate token
+    const rawToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto.createHash("sha256").update(rawToken).digest("hex");
+
+    user.passwordResetToken = hashedToken;
+    user.passwordResetExpires = Date.now() + 15 * 60 * 1000;
+    await user.save();
+
+    // Send reset email (pass rawToken)
+    await forgetPasswordEmail(user.email, user.username, rawToken);
+
+    return res.status(200).send({
+      message: "Reset password email sent. Check your inbox.",
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send({ message: "Something went wrong." });
   }
 };

@@ -2,6 +2,8 @@ import nodemailer from "nodemailer";
 import ejs from "ejs";
 import path from "path";
 import { fileURLToPath } from "url";
+import dotenv from "dotenv";
+dotenv.config()
 
 // __dirname fix for ES Module
 const __filename = fileURLToPath(import.meta.url);

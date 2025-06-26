@@ -4,7 +4,8 @@ import {
   loginuser,
   logoutuser,
   refresh,
-  getUserInfo
+  getUserInfo,
+  forgetPassword
 } from "../controllers/authController.js";
 
 import {verifyOtpLogin} from "../controllers/verifyOTPLogin.js";
@@ -62,8 +63,15 @@ router.post("/resend-otp", resendOtp)
 // 3. refresh route for token rotation
 router.post("/refresh", refresh);
 
-
+// 4 logout the user
 router.post("/logout", protect, logoutuser);
+
+
+
+
+
+// forgot password
+router.post("/forget-password",[body("email").isEmail().withMessage("provide a valid email")],forgetPassword)
 
 router.get("/me", protect, getUserInfo);
 

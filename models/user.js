@@ -115,6 +115,10 @@ const userSchema = new mongoose.Schema(
 
     // Optional expiry (ISO date). TTL index removes stale docs automatically.
     emailVerifyTokenExpires: Date,
+    
+    passwordResetToken:String,
+    passwordResetExpires:Date,
+
     isBanned: {
       type: Boolean,
       default: false,
