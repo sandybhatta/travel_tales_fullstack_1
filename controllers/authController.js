@@ -285,3 +285,33 @@ export const resetPassword=async(req,res)=>{
 return res.status(500).send({message:"password didnt changed, internal error"})
   }
 }
+
+
+export const changePassword = async(req,res)=>{
+ 
+  const {oldPassword, newPassword}=req.body
+
+  if(!oldPassword || !newPassword){
+    return res.status(400).send({message:"provide both old password and the new password"})
+  }
+
+  try{
+    const isMatch= await req.user.comparePassword(oldPassword)
+
+    if(!isMatch){
+      return res.status(400).send({message:"password did not match"})
+    }
+    req.user.password=newPassword
+    await req.user.save()
+  
+    return res.status(200).send({message:"password changed successfully"})
+  
+
+
+  }catch(error){
+    return res.status(500).send({message:"password did not changed, internal server error "})
+
+  }
+  
+
+}

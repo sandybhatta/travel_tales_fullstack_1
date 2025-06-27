@@ -6,7 +6,8 @@ import {
   refresh,
   getUserInfo,
   forgetPassword,
-  resetPassword
+  resetPassword,
+  changePassword
 } from "../controllers/authController.js";
 
 import {verifyOtpLogin} from "../controllers/verifyOTPLogin.js";
@@ -83,7 +84,7 @@ router.post("/reset-password",resetPassword)
 
 
 //change password for logged in user 
-router
+router.post("/change-password", protect,changePassword )
 
 
 router.get("/me", protect, getUserInfo);
