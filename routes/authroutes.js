@@ -5,7 +5,8 @@ import {
   logoutuser,
   refresh,
   getUserInfo,
-  forgetPassword
+  forgetPassword,
+  resetPassword
 } from "../controllers/authController.js";
 
 import {verifyOtpLogin} from "../controllers/verifyOTPLogin.js";
@@ -71,7 +72,19 @@ router.post("/logout", protect, logoutuser);
 
 
 // forgot password
-router.post("/forget-password",[body("email").isEmail().withMessage("provide a valid email")],forgetPassword)
+router.post("/forget-password",
+[
+  body("email").isEmail().withMessage("provide a valid email")],
+  forgetPassword)
+
+
+//reset password after the forget email verification 
+router.post("/reset-password",resetPassword)
+
+
+//change password for logged in user 
+router
+
 
 router.get("/me", protect, getUserInfo);
 

@@ -204,7 +204,7 @@ export const logoutuser = async (req, res) => {
 
 
 
-export const forgotPassword = async (req, res) => {
+export const forgetPassword = async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -247,3 +247,41 @@ export const forgotPassword = async (req, res) => {
     return res.status(500).send({ message: "Something went wrong." });
   }
 };
+
+
+
+
+
+
+export const resetPassword=async(req,res)=>{
+
+  // extract the new password and the token from body
+
+  const {token , password,email}=req.body
+
+  if(!token || !password || !email){
+   return  res.status(401).send({message:"invalid credentials provide the token and password and email"})
+  }
+
+  try{
+ const hashedToken= crypto.createHash("sha256").update(token).digest("hex")
+   const user= await User.findOne({email,passwordResetToken:hashedToken,
+  passwordResetExpires:{$gt:Date.now()}})
+
+   if(!user){
+    return res.status(400).send({message:"no such user by that email  or the token expired"})
+   }
+
+   user.passwordResetToken=undefined
+   user.passwordResetExpires=undefined
+ 
+
+
+   user.password=password
+   await user.save()
+   return res.status(200).send({message:"password have been changed successfully"})
+
+  }catch(err){
+return res.status(500).send({message:"password didnt changed, internal error"})
+  }
+}

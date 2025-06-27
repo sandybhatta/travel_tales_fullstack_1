@@ -21,7 +21,7 @@ const transporter = nodemailer.createTransport({
 export const forgetPasswordEmail = async (email, name, token) => {
   const templatePath = path.join(__dirname, "../emails/forgetPassword.ejs");
 
-  const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+  const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}&email=${email}`;
 
   const html = await ejs.renderFile(templatePath, { name, resetLink });
 
