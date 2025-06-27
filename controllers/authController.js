@@ -8,6 +8,10 @@ import Token from "../models/token.js"
 import dotenv from "dotenv"
 import crypto from "crypto"
 import {forgetPasswordEmail} from "../utils/sendForgetPassword.js"
+import {sendPasswordChangedEmail} from "../utils/sendPasswordChanged.js"
+
+
+
 
 dotenv.config()
 // importing token function of both refresh and access
@@ -15,7 +19,7 @@ dotenv.config()
 import { getRefreshToken, getAccessToken } from "../utils/tokenCreate.js";
 
 
-export const registerUser = async (req, res) => {
+export const registeruser = async (req, res) => {
   // Step 1: Validate incoming request body
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -31,6 +35,11 @@ export const registerUser = async (req, res) => {
     if (existingEmail && existingEmail.isVerified) {
       return res.status(400).json({ message: "Email is already in use." });
     }
+    // Step 3: Check if username is taken (only if verified)
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername && existingUsername.isVerified) {
+      return res.status(400).json({ message: "Username is already taken." });
+    }
 
     if (existingEmail && !existingEmail.isVerified) {
       // Reuse unverified account: generate new token and resend
@@ -42,11 +51,7 @@ export const registerUser = async (req, res) => {
         .json({ message: "Please verify your email. A new link has been sent." });
     }
 
-    // Step 3: Check if username is taken (only if verified)
-    const existingUsername = await User.findOne({ username });
-    if (existingUsername && existingUsername.isVerified) {
-      return res.status(400).json({ message: "Username is already taken." });
-    }
+    
 
     // Step 4: Create new user instance
     const newUser = new User({
@@ -107,6 +112,15 @@ if(!user.isVerified){
 if(user.isBanned){
     return res.status(403).send({message:"You are banned from this platform."});
 }
+
+// for deactivated user
+if(user.isDeactivated){
+  return res.status(403).send({
+    message: "Your account is deactivated. Reactivate to continue.",
+    allowReactivation: true, // so that frontend knows the error is for deactivated account and show reactivate button
+    userId: user._id // to prefill form in reactivate button
+  });
+}
     
     const otp= await OtpToken.generateOtpForUser(user._id, "login"); 
     await sendOTPEmail(user.email, user.username,otp);
@@ -127,54 +141,55 @@ if(user.isBanned){
 
 
 
-export const refresh=async(req,res)=>{
-
-  // extracted the old token from cookies
+export const refresh = async (req, res) => {
   const oldToken = req.cookies.refreshToken;
 
   if (!oldToken) {
     return res.status(401).json({ message: "No refresh token found." });
   }
 
-  try{
-
-
+  try {
     const payload = verifyToken(oldToken, process.env.JWT_REFRESH_SECRET);
 
-  
     const existingToken = await Token.findOne({ token: oldToken });
-    
+
     if (!existingToken) {
-      await Token.deleteMany({ userId: payload.userId });
+      await Token.deleteMany({ userId: payload.userId }); // Token reuse detection
       return res.status(403).json({ message: 'Token reuse detected. Re-login required.' });
     }
-    
-    // Remove old token, issue new one
+
+    // 🧠 Fetch user
+    const user = await User.findById(payload.userId);
+    if (!user) {
+      await existingToken.deleteOne();
+      return res.status(401).json({ message: "User not found." });
+    }
+
+    // ❌ If user is deactivated, deny token refresh
+    if (user.isDeactivated) {
+      await existingToken.deleteOne(); // Cleanup old token
+      return res.status(403).json({ message: "Account is deactivated. Reactivate to continue." });
+    }
+
+    // ✅ Valid refresh - rotate token
     await existingToken.deleteOne();
-    const newAccessToken = getAccessToken(payload.userId);
-    const newRefreshToken =  await getRefreshToken(payload.userId);
-    
-    
+
+    const newAccessToken = getAccessToken(user._id);
+    const newRefreshToken = await getRefreshToken(user._id);
+
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-  
-  
+
     res.json({ accessToken: newAccessToken });
-
-  }catch(error){
+  } catch (error) {
     console.error("Error in /refresh route:", error.message);
-  return res.status(401).json({ message: "Invalid or expired token." });
+    return res.status(401).json({ message: "Invalid or expired token." });
   }
-
-  
-  
-
-
-}
+};
 
 
 
@@ -287,6 +302,9 @@ return res.status(500).send({message:"password didnt changed, internal error"})
 }
 
 
+
+
+
 export const changePassword = async(req,res)=>{
  
   const {oldPassword, newPassword}=req.body
@@ -296,6 +314,9 @@ export const changePassword = async(req,res)=>{
   }
 
   try{
+    if(req.user.isDeactivated){
+      return res.status(400).send({message:"cannot change password , user is deactivated"})
+    }
     const isMatch= await req.user.comparePassword(oldPassword)
 
     if(!isMatch){
@@ -304,6 +325,9 @@ export const changePassword = async(req,res)=>{
     req.user.password=newPassword
     await req.user.save()
   
+
+    await sendPasswordChangedEmail(req.user.username, req.user.email);
+
     return res.status(200).send({message:"password changed successfully"})
   
 

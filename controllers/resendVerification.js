@@ -28,6 +28,13 @@ if(!email){
         return res.status(200).send({message:"Email is already verified"})
     }
 
+    if(existingUser.isDeactivated){
+        return res.status(403).send({message:"User is deactivated"})
+    }
+
+    if(existingUser.isBanned){
+        return res.status(403).send({message:"User is Banned from TravelTales"})
+    }
     //if user is found and the expiry didnt passed then wait
 
     if(existingUser.emailVerifyTokenExpires && existingUser.emailVerifyTokenExpires >Date.now()){
