@@ -126,7 +126,11 @@ const userSchema = new mongoose.Schema(
     isDeactivated: {
       type: Boolean,
       default: false,
-    }
+    },
+    deactivationReason:{
+      type:String,
+      
+    },
   },
   {
     timestamps: true, 

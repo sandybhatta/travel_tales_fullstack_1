@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Account Deactivated - TravelTales</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f9f9f9;
+        padding: 20px;
+        color: #333;
+      }
+      .container {
+        max-width: 600px;
+        margin: auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      .header h1 {
+        color: #2c3e50;
+      }
+      .content p {
+        font-size: 16px;
+        line-height: 1.6;
+      }
+      .reactivate-btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+      .footer {
+        margin-top: 30px;
+        font-size: 13px;
+        color: #777;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>TravelTales</h1>
+      </div>
+
+      <div class="content">
+        <p>Hi <strong><%= username %></strong>,</p>
+
+        <p>
+          You've successfully deactivated your TravelTales account. Your profile, posts, trips, and other data are now hidden from other users.
+        </p>
+
+        <p>
+          If this was intentional, no action is needed. Your data remains safe and intact.
+        </p>
+
+        <p>
+          To reactivate your account in the future, simply <strong>log in again</strong> using your email and password. You’ll be immediately reactivated and can continue sharing your adventures.
+        </p>
+
+        <a class="reactivate-btn" href="<%= loginUrl %>">Reactivate via Login</a>
+
+        <p>If you didn’t initiate this deactivation, please contact our support team immediately.</p>
+      </div>
+
+      <div class="footer">
+        &copy; <%= new Date().getFullYear() %> TravelTales. All rights reserved.
+      </div>
+    </div>
+  </body>
+</html>

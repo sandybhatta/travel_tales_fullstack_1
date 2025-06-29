@@ -14,6 +14,10 @@ export const resendOtp = async (req, res) => {
   }
 
   try {
+
+   
+
+
     const otpOfUser=await OTP.findOne({user:userId , type })
 
     if(otpOfUser && otpOfUser.expiresAt && otpOfUser.expiresAt > Date.now() )
@@ -23,6 +27,9 @@ export const resendOtp = async (req, res) => {
 
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found." });
+    if(user.isDeactivate){
+      return res.status(403).json({ message: "Account is deactivated " });
+    }
 
     // 🧼 Delete old OTPs of same type
     await OTP.deleteMany({ user: user._id, type });

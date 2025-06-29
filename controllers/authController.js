@@ -6,7 +6,7 @@ import  OtpToken from "../models/Otp.js";
 import {verifyToken} from "../utils/tokenCreate.js"
 import Token from "../models/token.js"
 import dotenv from "dotenv"
-import crypto from "crypto"
+import { sendDeactivateEmail } from "../utils/sendDeactivateEmail.js";
 
 import {sendPasswordChangedEmail} from "../utils/sendPasswordChanged.js"
 
@@ -40,7 +40,7 @@ export const registeruser = async (req, res) => {
 
     if (existingEmail?.isDeactivated) {
       return res.status(403).json({
-        message: "Account is deactivated. Please recover your account in the login page",
+        message: "Account is deactivated. Please reactivate your account in the login page",
       });
     }
     if (existingEmail?.isBanned) {
@@ -384,5 +384,52 @@ export const changePassword = async(req,res)=>{
 
   }
   
+
+}
+
+
+
+
+
+
+
+
+export const deactivateUser =async(req,res)=>{
+ 
+  const {user} = req
+  const {deactivationReason}=req.body
+
+  try{
+    if(user.isDeactivated){
+      return res.status(400).send({message:"your account is already deactivated"})
+    }
+    user.isDeactivated=true;
+    user.deactivationReason=deactivationReason || "no reason at all"
+
+    await user.save()
+  
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+    });
+    
+    const token =await Token.findOne({userId:user._id})
+
+    if(token){
+      await token.deleteOne()
+    }
+    
+    await sendDeactivateEmail(user.email,user.username)
+
+    return res.status(200).send({message:"Account Deactivated successfully, to reactivate go to the login page and reactivate your account"})
+  
+  }catch(error){
+    console.error("Deactivate Error:", error);
+return res.status(500).json({ message: "Something went wrong while deactivating account." });
+  }
+
+  
+
 
 }
