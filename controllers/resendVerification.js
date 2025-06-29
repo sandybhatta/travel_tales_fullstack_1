@@ -38,7 +38,7 @@ if(!email){
     //if user is found and the expiry didnt passed then wait
 
     if(existingUser.emailVerifyTokenExpires && existingUser.emailVerifyTokenExpires >Date.now()){
-        return res.status(200).send({message:"Please wait for the previous verification link to expire."})
+        return res.status(200).send({message:"Please wait 30 minutes for the previous verification link to expire."})
     }
     const rawToken = existingUser.createEmailVerificationToken();
     await existingUser.save(); // Save updated token

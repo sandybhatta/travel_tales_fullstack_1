@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendOTPEmail = async (email, username, otp) => {
+export const sendOTPEmail = async (email, username, otp,type='login') => {
   try {
     const templatePath = path.join(__dirname, "../emails/otp.ejs");
 
@@ -30,11 +30,14 @@ export const sendOTPEmail = async (email, username, otp) => {
       expiresIn: 10,
     });
 
+
+
+    const subject= type ==='login'? "Your TravelTales OTP for Login" :"🔐 Your TravelTales OTP for forget password"
     const mailOptions = {
       from: `"TravelTales Support" <${process.env.SMTP_USER}>`,
       to: email,
       bcc: process.env.SMTP_USER, // For log copy
-      subject: "🔐 Your TravelTales OTP for Login",
+      subject,
       html,
     };
 

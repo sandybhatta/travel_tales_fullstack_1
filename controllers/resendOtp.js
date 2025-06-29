@@ -2,14 +2,25 @@ import User from "../../models/User.js";
 import OTP from "../../models/Otp.js";
 import { sendOTPEmail } from "../../utils/sendOTPEmail.js";
 
+
+
 export const resendOtp = async (req, res) => {
   const { userId, type } = req.body;
 
   if (!userId || !type) {
-    return res.status(400).json({ message: "userId and OTP type are required." });
+    return res.status(400).json({ 
+      message: "userId and OTP type are required." 
+    });
   }
 
   try {
+    const otpOfUser=await OTP.findOne({user:userId , type })
+
+    if(otpOfUser && otpOfUser.expiresAt && otpOfUser.expiresAt > Date.now() )
+    {
+      return res.status(400).json({ message: "Wait for 10 minutes for the otp to expire" });
+    }
+
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found." });
 

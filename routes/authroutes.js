@@ -53,10 +53,14 @@ resendVerification)
 
 //2 for logging in user
 router.post("/login", loginuser);       // + validateLogin
+
 router.post("/otp-login",[
   body("otp").isLength({ min: 6, max:6 }).withMessage("OTP must be 6 digits")], 
 
   verifyOtpLogin); // OTP login
+
+
+
 router.post("/resend-otp", resendOtp)
 
 

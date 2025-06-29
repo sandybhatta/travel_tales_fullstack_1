@@ -23,6 +23,10 @@ export const verifyEmail = async (req, res) => {
     if (user.isVerified) {
       return res.status(200).json({ message: "Email is already verified" });
     }
+    if (user.isDeactivated) {
+      return res.status(400).json({ message: "User is deactivated" });
+    }
+    
 
     user.isVerified = true;
     user.emailVerifyToken = undefined;

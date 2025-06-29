@@ -7,7 +7,7 @@ import {verifyToken} from "../utils/tokenCreate.js"
 import Token from "../models/token.js"
 import dotenv from "dotenv"
 import crypto from "crypto"
-import {forgetPasswordEmail} from "../utils/sendForgetPassword.js"
+
 import {sendPasswordChangedEmail} from "../utils/sendPasswordChanged.js"
 
 
@@ -19,58 +19,71 @@ dotenv.config()
 import { getRefreshToken, getAccessToken } from "../utils/tokenCreate.js";
 
 
-export const registeruser = async (req, res) => {
-  // Step 1: Validate incoming request body
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
 
-  const { email, username, password, location } = req.body;
+
+
+
+
+export const registeruser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+  const { name, email, username, password, location } = req.body;
 
   try {
-    // Step 2: Check if email already exists
     const existingEmail = await User.findOne({ email });
+    const existingUsername = await User.findOne({ username });
 
-    if (existingEmail && existingEmail.isVerified) {
+    if (existingEmail?.isVerified) {
       return res.status(400).json({ message: "Email is already in use." });
     }
-    // Step 3: Check if username is taken (only if verified)
-    const existingUsername = await User.findOne({ username });
-    if (existingUsername && existingUsername.isVerified) {
+
+    if (existingEmail?.isDeactivated) {
+      return res.status(403).json({
+        message: "Account is deactivated. Please recover your account in the login page",
+      });
+    }
+    if (existingEmail?.isBanned) {
+      return res.status(403).json({
+        message: "Account is Banned from TravelTales",
+      });
+    }
+
+    if (existingUsername?.isVerified) {
       return res.status(400).json({ message: "Username is already taken." });
     }
 
-    if (existingEmail && !existingEmail.isVerified) {
-      // Reuse unverified account: generate new token and resend
-      const rawToken = existingEmail.createEmailVerificationToken();
-      await existingEmail.save(); // Save updated token
-      await sendEmail(email, username, rawToken);
-      return res
-        .status(200)
-        .json({ message: "Please verify your email. A new link has been sent." });
+    if (existingUsername?.isDeactivated) {
+      return res.status(403).json({
+        message: "This username is linked to a deactivated account.",
+      });
     }
 
-    
+    if (
+      existingEmail &&
+      !existingEmail.isVerified &&
+      existingEmail.emailVerifyTokenExpires &&
+      existingEmail.emailVerifyTokenExpires > Date.now()
+    ) {
+      return res.status(400).json({
+        message: "Please wait until the previous verification email expires.",
+      });
+    }
 
-    // Step 4: Create new user instance
-    const newUser = new User({
-      email,
-      username,
-      password,
-      location,
-    });
+    if (existingEmail && !existingEmail.isVerified) {
+      const rawToken = existingEmail.createEmailVerificationToken();
+      await existingEmail.save();
+      await sendEmail(email, username, rawToken);
+      return res.status(200).json({
+        message: "Please verify your email. A new link has been sent.",
+      });
+    }
 
-    // Step 5: Generate and attach verification token
+    const newUser = new User({ name, email, username, password, location });
     const rawToken = newUser.createEmailVerificationToken();
-
-    // Step 6: Save user to DB (so hashed token is stored)
     await newUser.save();
-
-    // Step 7: Send verification email
     await sendEmail(email, username, rawToken);
 
-    // Step 8: Respond success
     res.status(201).json({
       message: "Registration successful! Check your email to verify your account.",
     });
@@ -79,6 +92,9 @@ export const registeruser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
+
+
 
 
 export const loginuser =async (req,res)=>{
@@ -119,6 +135,16 @@ if(user.isDeactivated){
     message: "Your account is deactivated. Reactivate to continue.",
     allowReactivation: true, // so that frontend knows the error is for deactivated account and show reactivate button
     userId: user._id // to prefill form in reactivate button
+  });
+}
+
+
+const otpOfUser=await OtpToken.findOne({user:user._id, type:"login"})
+
+if(otpOfUser && otpOfUser.expiresAt > Date.now() ){
+
+  return res.status(400).json({
+    message: "Please wait until the previous OTP email expires.",
   });
 }
     
@@ -235,25 +261,35 @@ export const forgetPassword = async (req, res) => {
       return res.status(400).send({ message: "Register yourself first." });
     }
 
+    if (user && user.isDeactivated){
+      return  res.status(403).send({ message: "User is deactivated , login to reactivate your account" });
+    }
     if (user.isBanned) {
       return res.status(403).send({ message: "You are banned from TravelTales." });
     }
 
-    if (user.passwordResetExpires && user.passwordResetExpires > Date.now()) {
-      return res.status(429).send({ message: "Wait 15 minutes before retrying." });
+
+    const otpOfUser=await OtpToken.findOne({user:user._id, type:"reset_password"})
+
+    if(otpOfUser && otpOfUser.expiresAt > Date.now() ){
+
+      return res.status(400).json({
+        message: "Please wait until the previous OTP email of forget password expires.",
+
+        });
     }
-
+   
     // Generate token
-    const rawToken = crypto.randomBytes(32).toString("hex");
-    const hashedToken = crypto.createHash("sha256").update(rawToken).digest("hex");
 
-    user.passwordResetToken = hashedToken;
-    user.passwordResetExpires = Date.now() + 15 * 60 * 1000;
-    await user.save();
 
+    const otpToken= await OtpToken.generateOtpForUser(user._id, "reset_password")
+
+    await sendOTPEmail(user.email, user.username,otpToken,"reset_password");
+
+
+   
     // Send reset email (pass rawToken)
-    await forgetPasswordEmail(user.email, user.username, rawToken);
-
+  
     return res.status(200).send({
       message: "Reset password email sent. Check your inbox.",
     });
@@ -279,16 +315,27 @@ export const resetPassword=async(req,res)=>{
   }
 
   try{
- const hashedToken= crypto.createHash("sha256").update(token).digest("hex")
-   const user= await User.findOne({email,passwordResetToken:hashedToken,
-  passwordResetExpires:{$gt:Date.now()}})
+
+
+
+   const user= await User.findOne({email})
 
    if(!user){
     return res.status(400).send({message:"no such user by that email  or the token expired"})
    }
 
-   user.passwordResetToken=undefined
-   user.passwordResetExpires=undefined
+   const otpOfUser = await OtpToken.findOne({user:user._id, type:"reset_password"})
+
+   if(!otpOfUser){
+    return res.status(400).send({message:"invalid otp"})
+   }
+
+   const isValid = await otpOfUser.isValidOtp(token)
+   
+   if(!isValid){
+    return res.status(400).send({message:"otp did not match"})
+   }
+ 
  
 
 

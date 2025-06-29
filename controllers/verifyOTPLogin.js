@@ -1,8 +1,15 @@
 import User from "../../models/User.js";
 import OTP from "../../models/Otp.js";
 import { getAccessToken, getRefreshToken } from "../../utils/tokenCreate.js";
+import {validationResult} from "express-validator"
 
 export const verifyOtpLogin = async (req, res) => {
+
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+
   const { userId, otp } = req.body;
 
   // 🔐 1. Validate input
@@ -18,7 +25,7 @@ export const verifyOtpLogin = async (req, res) => {
     }
 
     // ❌ 3. Check expiration
-    if (otpDoc.expiresAt < new Date()) {
+    if (otpDoc.expiresAt < Date.now()) {
       await otpDoc.deleteOne();
       return res.status(400).json({ message: "OTP expired. Please login again." });
     }

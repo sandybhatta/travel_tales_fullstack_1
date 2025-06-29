@@ -28,6 +28,7 @@ export const protect = async (req, res, next) => {
       if (!user) {
         return res.status(401).json({ message: "User no longer exists" });
       }
+      
   
       // 4. Attach user to request
       req.user = user;

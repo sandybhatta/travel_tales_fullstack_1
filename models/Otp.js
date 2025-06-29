@@ -27,10 +27,7 @@ const otpTokenSchema = new mongoose.Schema(
       
     },
 
-    used: {
-      type: Boolean,
-      default: false,
-    },
+   
   },
   {
     timestamps: true,
@@ -50,7 +47,7 @@ otpTokenSchema.methods.isValidOtp = function (enteredOtp) {
     .update(enteredOtp)
     .digest("hex");
 
-  return this.otp === enteredHash && !this.used && this.expiresAt > new Date();
+  return this.otp === enteredHash && this.expiresAt > new Date();
 };
 
 // 🛠 Static to generate OTP
