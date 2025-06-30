@@ -11,6 +11,8 @@ import { sendDeactivateEmail } from "../utils/sendDeactivateEmail.js";
 import {sendPasswordChangedEmail} from "../utils/sendPasswordChanged.js"
 
 
+import {sendReactivationEmail} from "../utils/sendReactivationEmail.js"
+
 
 
 dotenv.config()
@@ -403,7 +405,14 @@ export const deactivateUser =async(req,res)=>{
     if(user.isDeactivated){
       return res.status(400).send({message:"your account is already deactivated"})
     }
+
+    if (user.deactivatedDate && Date.now() - new Date(user.deactivatedDate).getTime() > 30 * 24 * 60 * 60 * 1000) {
+      return res.status(400).send({ message: "Cannot deactivate your account after 30 days of last deactivation" });
+    }
+    
+
     user.isDeactivated=true;
+    user.deactivatedDate=new Date()
     user.deactivationReason=deactivationReason || "no reason at all"
 
     await user.save()
@@ -431,5 +440,47 @@ return res.status(500).json({ message: "Something went wrong while deactivating 
 
   
 
+
+}
+
+
+
+
+
+export const reactivateUser =  async(req,res)=>{
+  
+    const {userId}=req.body
+
+    try{
+      const user = await User.findById(userId)
+
+      if(!user){
+        return res.status(404).send({message:"user not found"})
+      }
+
+      if(user.isBanned){
+        return res.status(400).send({message:"user is Banned from TravelTales"})
+      }
+      if (!user.isDeactivated) {
+        return res.status(400).send({ message: "Account is already active" });
+      }
+
+      user.isDeactivated = false;
+      user.deactivationReason = undefined;
+
+      await user.save();
+      await sendReactivationEmail(user.email,user.username)
+
+      return res.status(200).send({ message: "Account reactivated. You can now log in." });
+    }catch(err){
+
+    }
+
+}
+
+
+export const getUserInfo =  async(req,res)=>{
+  
+    const {userId}=req.body
 
 }

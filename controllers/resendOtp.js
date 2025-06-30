@@ -1,6 +1,6 @@
-import User from "../../models/User.js";
-import OTP from "../../models/Otp.js";
-import { sendOTPEmail } from "../../utils/sendOTPEmail.js";
+import User from "../models/User.js";
+import OTP from "../models/Otp.js";
+import { sendOTPEmail } from "../utils/sendOTPemail.js";
 
 
 

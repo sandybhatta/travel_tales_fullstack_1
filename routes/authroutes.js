@@ -8,7 +8,8 @@ import {
   forgetPassword,
   resetPassword,
   changePassword,
-  deactivateUser
+  deactivateUser,
+  reactivateUser
 } from "../controllers/authController.js";
 
 import {verifyOtpLogin} from "../controllers/verifyOTPLogin.js";
@@ -37,7 +38,7 @@ router.post("/register",[
     .withMessage("Username must be at least 3 characters long")
     .notEmpty()
     .withMessage("Username is required"),
-    body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters long"),
+    
 ], registeruser); // + validateRegister
 
 
@@ -96,6 +97,8 @@ router.post("/change-password", protect,changePassword )
 
 
 router.post("/deactivate-user",protect, deactivateUser)
+
+router.post("/reactivate-user", reactivateUser)
 
 
 router.get("/me", protect, getUserInfo);

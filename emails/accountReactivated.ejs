@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>TravelTales - Account Reactivated</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f7fa;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        background-color: #ffffff;
+        max-width: 600px;
+        margin: 50px auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+      }
+      h1 {
+        color: #0077cc;
+      }
+      .btn {
+        display: inline-block;
+        background-color: #0077cc;
+        color: #ffffff !important;
+        padding: 12px 24px;
+        margin: 20px 0;
+        border-radius: 4px;
+        text-decoration: none;
+      }
+      p {
+        line-height: 1.6;
+      }
+      .footer {
+        margin-top: 30px;
+        font-size: 13px;
+        color: #888;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Welcome Back, <%= username %>! 👋</h1>
+      <p>
+        Your TravelTales account has been successfully <strong>reactivated</strong>.
+      </p>
+      <p>
+        To start using your account again, please log in and verify your identity using the
+        <strong>6-digit OTP</strong> which we will send to your email.
+      </p>
+      <a href="<%= loginUrl %>" class="btn">Login Now</a>
+
+      <p>If you didn’t request this reactivation, please contact our support immediately.</p>
+
+      <div class="footer">
+        TravelTales Support Team<br />
+        🚀 Explore. Share. Inspire.
+      </div>
+    </div>
+  </body>
+</html>

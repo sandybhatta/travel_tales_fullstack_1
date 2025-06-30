@@ -1,6 +1,6 @@
-import User from "../../models/User.js";
-import OTP from "../../models/Otp.js";
-import { getAccessToken, getRefreshToken } from "../../utils/tokenCreate.js";
+import User from "../models/User.js";
+import OTP from "../models/Otp.js";
+import { getAccessToken, getRefreshToken } from "../utils/tokenCreate.js";
 import {validationResult} from "express-validator"
 
 export const verifyOtpLogin = async (req, res) => {

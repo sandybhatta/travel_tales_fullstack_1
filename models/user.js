@@ -131,6 +131,9 @@ const userSchema = new mongoose.Schema(
       type:String,
       
     },
+    deactivatedDate:{
+      type:Date
+    }
   },
   {
     timestamps: true, 
