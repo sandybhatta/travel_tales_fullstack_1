@@ -1,15 +1,38 @@
 import ejs from "ejs";
 import path from "path";
-import { transporter } from "../config/nodemailer.js"; // Adjust if your transporter is elsewhere
+// Adjust if your transporter is elsewhere
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-
+import nodemailer from "nodemailer"
 // To get __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 
+
+
+
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASSWORD,
+  },
+});
+
+
+
+
+
 export const sendReactivationEmail = async (email, username) => {
+
+
+
+
+
   try {
     // Template path
     const templatePath = path.join(__dirname, "../emails/accountReactivated.ejs");

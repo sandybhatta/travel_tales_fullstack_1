@@ -133,8 +133,46 @@ const userSchema = new mongoose.Schema(
     },
     deactivatedDate:{
       type:Date
-    }
+    },
+
+
+    // for extra features 
+
+    privacy: {
+      profileVisibility: {
+        type: String,
+        enum: ["public", "followers", "private"],
+        default: "public",
+      },
+      allowComments: {
+        type: String,
+        enum: ["everyone", "followers", "close_friends", "no_one"],
+        default: "everyone",
+      },
+    },
+
+    blockedUsers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+
+      // building this model
+    interests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Interest",
+      }
+    ]
   },
+
+
+
+
+
+
+
   {
     timestamps: true, 
   }
