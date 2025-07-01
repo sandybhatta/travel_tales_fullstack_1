@@ -83,8 +83,10 @@ export const registeruser = async (req, res) => {
 
     const newUser = new User({ name, email, username, password, location });
     const rawToken = newUser.createEmailVerificationToken();
+    
     await newUser.save();
-    await sendEmail(email, username, rawToken);
+
+    await sendEmail(email, username, rawToken,"Thanks for signing up. Please verify your email address to activate your account: within 30 minutes");
 
     res.status(201).json({
       message: "Registration successful! Check your email to verify your account.",

@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+    pendingEmail: {
+      type: String,
+      trim: true,
+    },
     password: {
       type: String,
       required: true, // Will skip for OAuth users
