@@ -10,14 +10,14 @@ import {
   changePassword,
   deactivateUser,
   reactivateUser
-} from "../auth.controllers/authController.js";
+} from "../Controllers/auth.controllers/authController.js";
 
-import {verifyOtpLogin} from "../auth.controllers/verifyOTPLogin.js";
+import {verifyOtpLogin} from "../Controllers/auth.controllers/verifyOTPLogin.js";
 
-import {verifyEmail} from "../auth.controllers/verificationEmailApi.js"
+import {verifyEmail} from "../Controllers/auth.controllers/verificationEmailApi.js"
 
-import resendVerification from "../auth.controllers/resendVerification.js";
-import {resendOtp} from "../auth.controllers/resendOtp.js";
+import resendVerification from "../Controllers/auth.controllers/resendVerification.js";
+import {resendOtp} from "../Controllers/auth.controllers/resendOtp.js";
 
 // imported express-validator
 import {body} from "express-validator";

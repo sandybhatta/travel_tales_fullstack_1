@@ -17,6 +17,9 @@ const userSchema = new mongoose.Schema(
       trim: true,
       minLength:3
     },
+    usernameChangedAt:{
+      type:Date,
+    },
     email: {
       type: String,
       required: true,

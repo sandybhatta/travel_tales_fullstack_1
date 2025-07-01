@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { connectDb } from "./config/db.js";
 import authRoutes from "./routes/authroutes.js"
-import nodemailer from "nodemailer"
+import userRoutes from "./routes/userRoutes.js"
 dotenv.config();
 
 

@@ -7,7 +7,7 @@ import Token from "../models/token.js"; // Assuming you have a token model
 
 import { deleteCommentThread } from "../utils/deleteCommentThread.js";
 
-export default deleteUser = async (req, res) => {
+const  deleteUser = async (req, res) => {
   const { user } = req;
   const { password } = req.body;
 
@@ -112,3 +112,7 @@ export default deleteUser = async (req, res) => {
     return res.status(500).send({ message: "Internal server error" });
   }
 };
+
+
+
+export default deleteUser;
