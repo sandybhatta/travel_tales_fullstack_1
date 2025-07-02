@@ -14,6 +14,7 @@ import changeEmail from "../Controllers/user.controllers/changeEmail.js"
 import verifyEmailChange from "../Controllers/user.controllers/verifyEmailChange.js"
 import followUser from "../Controllers/user.controllers/followUser.js"
 import unfollowUser from "../Controllers/user.controllers/unfollowUser.js"
+import followerOfId from "../Controllers/user.controllers/followerOfId.js"
 
 
 
@@ -50,9 +51,9 @@ router.patch("/change-username",protect, changeusername)
 
 
 // to change and verify email change
-router.patch("change-email",changeEmail)
+router.patch("change-email",protect,changeEmail)
 
-router.post("/verify-email-change",verifyEmailChange)
+router.post("/verify-email-change",protect,verifyEmailChange)
 
 
 // to follow someone
@@ -61,6 +62,10 @@ router.post("/follow/:id",protect,followUser)
 
 // to unfollow someone
 router.post("/unfollow/:id",protect,unfollowUser)
+
+// to see the target user's followers
+
+router.get("/:id/followers",protect, followerOfId)
 
 
 
