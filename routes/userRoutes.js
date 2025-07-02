@@ -12,6 +12,7 @@ import updateProfile from "../Controllers/user.controllers/updateProfile.js"
 import changeusername from "../Controllers/user.controllers/changeusername.js"
 import changeEmail from "../Controllers/user.controllers/changeEmail.js"
 import verifyEmailChange from "../Controllers/user.controllers/verifyEmailChange.js"
+import followUser from "../Controllers/user.controllers/followUser.js"
 
 
 
@@ -45,9 +46,17 @@ router.patch("/update-profile",protect,updateProfile)
 
 router.patch("/change-username",protect, changeusername)
 
+
+
+// to change and verify email change
 router.patch("change-email",changeEmail)
 
 router.post("/verify-email-change",verifyEmailChange)
+
+
+// to follow someone
+
+router.post("/follow/:id",protect,followUser)
 
 
 
