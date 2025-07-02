@@ -13,6 +13,7 @@ import changeusername from "../Controllers/user.controllers/changeusername.js"
 import changeEmail from "../Controllers/user.controllers/changeEmail.js"
 import verifyEmailChange from "../Controllers/user.controllers/verifyEmailChange.js"
 import followUser from "../Controllers/user.controllers/followUser.js"
+import unfollowUser from "../Controllers/user.controllers/unfollowUser.js"
 
 
 
@@ -55,8 +56,11 @@ router.post("/verify-email-change",verifyEmailChange)
 
 
 // to follow someone
-
 router.post("/follow/:id",protect,followUser)
+
+
+// to unfollow someone
+router.post("/unfollow/:id",protect,unfollowUser)
 
 
 
