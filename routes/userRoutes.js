@@ -15,6 +15,7 @@ import verifyEmailChange from "../Controllers/user.controllers/verifyEmailChange
 import followUser from "../Controllers/user.controllers/followUser.js"
 import unfollowUser from "../Controllers/user.controllers/unfollowUser.js"
 import followerOfId from "../Controllers/user.controllers/followerOfId.js"
+import followingOfUser from "../Controllers/user.controllers/followingOfUser.js"
 
 
 
@@ -66,6 +67,10 @@ router.post("/unfollow/:id",protect,unfollowUser)
 // to see the target user's followers
 
 router.get("/:id/followers",protect, followerOfId)
+
+// to see the target user's following
+
+router.get("/:id/following",protect, followingOfUser)
 
 
 

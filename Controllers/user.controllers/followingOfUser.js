@@ -1,13 +1,13 @@
 import User from "../../models/User.js";
 
-const followerOfId = async (req, res) => {
+const followingOfUser = async (req, res) => {
   const { id } = req.params;
   const { user } = req;
   const limit = parseInt(req.query.limit) || 10;
   const skip = parseInt(req.query.skip) || 0;
 
   try {
-    const target = await User.findById(id).select("followers isBanned isDeactivated blockedUsers privacy");
+    const target = await User.findById(id).select("following followers isBanned isDeactivated blockedUsers privacy");
 
     if (!target) {
       return res.status(404).json({ message: "User not found" });
@@ -30,12 +30,12 @@ const followerOfId = async (req, res) => {
     }
 
     const hasBlocked = user.blockedUsers?.some(
-        (userId) => userId.toString() === target._id.toString()
-      );
-  
-      if (hasBlocked) {
-        return res.status(403).json({ message: "You blocked the user" });
-      }
+      (userId) => userId.toString() === target._id.toString()
+    );
+
+    if (hasBlocked) {
+      return res.status(403).json({ message: "You blocked the user" });
+    }
 
     const visibility = target.privacy?.profileVisibility || "public";
 
@@ -47,30 +47,31 @@ const followerOfId = async (req, res) => {
       const isFollower = target.followers.some(
         (followerId) => followerId.toString() === user._id.toString()
       );
+
       if (!isFollower) {
         return res.status(403).json({
-          message: "Only followers can view this user's followers",
+          message: "Only followers can view this user's following",
         });
       }
     }
 
     // Paginate the followers manually
-    const totalFollowers = target.followers.length;
-    const followerIds = target.followers.slice(skip, skip + limit);
+    const totalFollowings = target.following.length;
+    const followingIds = target.following.slice(skip, skip + limit);
 
-    const followers = await User.find({ _id: { $in: followerIds } })
+    const followings = await User.find({ _id: { $in: followingIds } })
       .select("username name avatar")
       .lean();
 
     return res.status(200).json({
-      followerList: followers,
-      hasMore: skip + limit < totalFollowers,
+      followingList: followings,
+      hasMore: skip + limit < totalFollowings,
     });
 
   } catch (error) {
-    console.error("Error fetching followers:", error);
+    console.error("Error fetching followings:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
 
-export default followerOfId;
+export default followingOfUser;
