@@ -8,8 +8,11 @@ const mutualFollowers = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
 
   try {
+    if(id.toString()===user._id.toString()){
+        return res.status(400).json({message:"you cannot see mutual friend of your own"})
+    }
     const target = await User.findById(id).select(
-      "username name avatar followers following isBanned isDeactivated blockedUsers privacy"
+      "username name avatar followers following isBanned isDeactivated blockedUsers privacy closeFriends"
     );
 
     if (!target) {
@@ -33,7 +36,9 @@ const mutualFollowers = async (req, res) => {
     }
 
     const profileVisibility = target.privacy?.profileVisibility || "public";
+
     if (profileVisibility === "private") {
+        
       return res.status(403).json({ message: "The account is private" });
     }
     if (profileVisibility === "followers") {
@@ -42,7 +47,17 @@ const mutualFollowers = async (req, res) => {
         return res.status(403).json({ message: "Follow the user to see mutual followers" });
       }
     }
+    if(visibility==="close_friends"){
 
+        const isCloseFriends= target.closeFriends?.some(uid=>uid.toString() === user._id.toString())
+
+        if(!isCloseFriends){
+            return res.status(403).json({
+                message: "Only close friends can view this user's followings",
+              });
+        }
+
+    }
     // Calculate mutual followers using Set
     // because in set the .has() method is O(1)
 

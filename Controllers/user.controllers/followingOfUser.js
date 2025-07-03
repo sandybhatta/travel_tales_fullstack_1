@@ -7,7 +7,7 @@ const followingOfUser = async (req, res) => {
   const skip = parseInt(req.query.skip) || 0;
 
   try {
-    const target = await User.findById(id).select("following followers isBanned isDeactivated blockedUsers privacy");
+    const target = await User.findById(id).select("following followers closeFriends isBanned isDeactivated blockedUsers privacy");
 
     if (!target) {
       return res.status(404).json({ message: "User not found" });
@@ -28,6 +28,8 @@ const followingOfUser = async (req, res) => {
     if (isBlocked) {
       return res.status(403).json({ message: "You are blocked by this user" });
     }
+    
+    
 
     const hasBlocked = user.blockedUsers?.some(
       (userId) => userId.toString() === target._id.toString()
@@ -40,6 +42,27 @@ const followingOfUser = async (req, res) => {
     const visibility = target.privacy?.profileVisibility || "public";
 
     if (visibility === "private") {
+        if(id.toString() === user._id.toString()){
+            const totalFollowings = target.following.length;
+                if (totalFollowings === 0) {
+                    return res.status(200).json({
+                    count: 0,
+                    followeingList: [],
+                    hasMore: false,
+                    });
+                }
+            const followingIds = target.following.slice(skip, skip + limit);
+
+            const followings = await User.find({ _id: { $in: followingIds } })
+            .select("username name avatar")
+            .lean();
+
+            return res.status(200).json({
+                count:totalFollowings,
+            followingList: followings,
+            hasMore: skip + limit < totalFollowings,
+            });
+        }
       return res.status(403).json({ message: "This account is private" });
     }
 
@@ -54,9 +77,27 @@ const followingOfUser = async (req, res) => {
         });
       }
     }
+    if(visibility==="close_friends"){
+
+        const isCloseFriends= target.closeFriends?.some(uid=>uid.toString() === user._id.toString())
+
+        if(!isCloseFriends){
+            return res.status(403).json({
+                message: "Only close friends can view this user's followings",
+              });
+        }
+
+    }
 
     // Paginate the followers manually
     const totalFollowings = target.following.length;
+    if (totalFollowings === 0) {
+        return res.status(200).json({
+          count: 0,
+          followeingList: [],
+          hasMore: false,
+        });
+      }
     const followingIds = target.following.slice(skip, skip + limit);
 
     const followings = await User.find({ _id: { $in: followingIds } })

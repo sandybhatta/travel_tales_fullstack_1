@@ -50,7 +50,7 @@ const tripSchema = new mongoose.Schema(
     ],
     visibility: {
         type: String,
-        enum: ["public", "followers", "close_friends"],
+        enum: ["public", "followers", "close_friends","private"],
         default: "public",
       },
     invitedFriends: [

@@ -78,5 +78,22 @@ router.get("/:id/following",protect, followingOfUser)
 router.get("/:id/mutual-follower",protect, mutualFollowers)
 
 
+// to suggest someone to the user
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export default router

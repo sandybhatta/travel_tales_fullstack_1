@@ -74,7 +74,7 @@ const postSchema = new mongoose.Schema(
     // 🔒 Privacy Options
     visibility: {
       type: String,
-      enum: ["public", "followers", "close_friends"],
+      enum: ["public", "followers", "close_friends","private"],
       default: "public",
     },
 

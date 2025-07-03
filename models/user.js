@@ -65,6 +65,7 @@ const userSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+
     closeFriends: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -148,7 +149,7 @@ const userSchema = new mongoose.Schema(
     privacy: {
       profileVisibility: {
         type: String,
-        enum: ["public", "followers", "private"],
+        enum: ["public", "followers", "private","close_friends"],
         default: "public",
       },
       allowComments: {
