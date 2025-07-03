@@ -64,6 +64,7 @@ const followingOfUser = async (req, res) => {
       .lean();
 
     return res.status(200).json({
+        count:totalFollowings,
       followingList: followings,
       hasMore: skip + limit < totalFollowings,
     });

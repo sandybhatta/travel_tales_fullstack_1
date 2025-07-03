@@ -16,6 +16,7 @@ import followUser from "../Controllers/user.controllers/followUser.js"
 import unfollowUser from "../Controllers/user.controllers/unfollowUser.js"
 import followerOfId from "../Controllers/user.controllers/followerOfId.js"
 import followingOfUser from "../Controllers/user.controllers/followingOfUser.js"
+import mutualFollowers from "../Controllers/user.controllers/mutualFollowers.js"
 
 
 
@@ -71,6 +72,10 @@ router.get("/:id/followers",protect, followerOfId)
 // to see the target user's following
 
 router.get("/:id/following",protect, followingOfUser)
+
+// to see the mutual followers
+
+router.get("/:id/mutual-follower",protect, mutualFollowers)
 
 
 

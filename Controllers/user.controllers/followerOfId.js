@@ -63,6 +63,7 @@ const followerOfId = async (req, res) => {
       .lean();
 
     return res.status(200).json({
+        count:totalFollowers,
       followerList: followers,
       hasMore: skip + limit < totalFollowers,
     });
