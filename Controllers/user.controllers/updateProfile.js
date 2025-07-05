@@ -4,12 +4,12 @@
 
 const updateProfile= async(req,res)=>{
     const {user}=req
-    const {name , bio, avatar, city , state, country}=req.body
+    const {name , bio, avatar, city , state, country , interests}=req.body
 
     try{
         // if other fields are updating through this api rather than the fields that are expected to modify only then throw error
 
-        const allowedFields = ["name", "bio", "avatar", "city", "state", "country"];
+        const allowedFields = ["name", "bio", "avatar", "city", "state", "country" , "interests"];
 
         const invalidFields = Object.keys(req.body).filter(key => !allowedFields.includes(key));
 
@@ -19,7 +19,42 @@ const updateProfile= async(req,res)=>{
 
 
 
+        if(interests !== undefined){
+          if(!Array.isArray(interests)){
+            return res.status(400).send({message:"interests should be an array"})
+          }
+        }
 
+        const allowedInterests=[
+          "adventure",
+          "beach",
+          "mountains",
+          "history",
+          "food",
+          "wildlife",
+          "culture",
+          "luxury",
+          "budget",
+          "road_trip",
+          "solo",
+          "group",
+          "trekking",
+          "spiritual",
+          "nature",
+          "photography",
+          "festivals",
+          "architecture",
+          "offbeat",
+          "shopping",
+        ]
+
+
+        const isValid=interests.every(interest=>allowedInterests.includes(interest))
+        if(!isValid){
+          return res.status(400).send({message:"interest is not valid"})
+        }
+
+        user.interests=interests
 
        if(name !== undefined){
         user.name=name

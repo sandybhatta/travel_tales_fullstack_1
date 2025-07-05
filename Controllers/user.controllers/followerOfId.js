@@ -40,29 +40,10 @@ const followerOfId = async (req, res) => {
     const visibility = target.privacy?.profileVisibility || "public";
 
     if (visibility === "private") {
-        if(id.toString() === user._id.toString()){
-            const totalFollowers = target.followers.length;
-                //if no followers
-                if (totalFollowers === 0) {
-                    return res.status(200).json({
-                    count: 0,
-                    followerList: [],
-                    hasMore: false,
-                    });
-                }
-                const followerIds = target.followers.slice(skip, skip + limit);
-
-                const followers = await User.find({ _id: { $in: followerIds } })
-                .select("username name avatar")
-                .lean();
-
-                return res.status(200).json({
-                    count:totalFollowers,
-                followerList: followers,
-                hasMore: skip + limit < totalFollowers,
-                });
+        if(id.toString() !== user._id.toString()){
+            return res.status(403).json({ message: "This account is private" });
         }
-      return res.status(403).json({ message: "This account is private" });
+     
     }
 
     if (visibility === "followers") {

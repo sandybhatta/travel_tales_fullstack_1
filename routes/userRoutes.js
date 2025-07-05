@@ -17,6 +17,7 @@ import unfollowUser from "../Controllers/user.controllers/unfollowUser.js"
 import followerOfId from "../Controllers/user.controllers/followerOfId.js"
 import followingOfUser from "../Controllers/user.controllers/followingOfUser.js"
 import mutualFollowers from "../Controllers/user.controllers/mutualFollowers.js"
+import suggestions from "../Controllers/user.controllers/suggestions.js"
 
 
 
@@ -79,6 +80,7 @@ router.get("/:id/mutual-follower",protect, mutualFollowers)
 
 
 // to suggest someone to the user
+router.get("/suggestions",protect, suggestions)
 
 
 
