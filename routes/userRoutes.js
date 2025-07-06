@@ -23,6 +23,7 @@ import removeCloseFriend from "../Controllers/user.controllers/removeCloseFriend
 import getCloseFriends from "../Controllers/user.controllers/getCloseFriends.js"
 import bookmarkPost from "../Controllers/user.controllers/bookmarkPost.js"
 import getBookmarkedposts from "../Controllers/user.controllers/getBookmarkedposts.js"
+import searchMentionableUser from "../Controllers/user.controllers/searchMentionableUser.js"
 
 
 
@@ -114,6 +115,10 @@ router.patch("/bookmark/:postId",protect, bookmarkPost )
 //for retrieving the bookmarked post
 router.get('/bookmarks',protect,getBookmarkedposts)
 
+
+// for searching user for mentions
+
+router.get('/search-mentions', protect , searchMentionableUser)
 
 
 
