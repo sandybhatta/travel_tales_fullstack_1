@@ -20,6 +20,7 @@ import mutualFollowers from "../Controllers/user.controllers/mutualFollowers.js"
 import suggestions from "../Controllers/user.controllers/suggestions.js"
 import addCloseFriend from "../Controllers/user.controllers/addCloseFriend.js"
 import removeCloseFriend from "../Controllers/user.controllers/removeCloseFriend.js"
+import getCloseFriends from "../Controllers/user.controllers/getCloseFriends.js"
 
 
 
@@ -89,9 +90,13 @@ router.get("/suggestions",protect, suggestions)
 router.patch('/close-friends/:id',protect,addCloseFriend)
 
 
-
+// deleting a close Friend 
 router.delete('/close-friends/:id',protect,removeCloseFriend)
 
+
+// getting the list of the close
+
+router.get("/close-friends", protect, getCloseFriends)
 
 
 
