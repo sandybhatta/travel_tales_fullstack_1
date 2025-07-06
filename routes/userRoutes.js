@@ -22,6 +22,7 @@ import addCloseFriend from "../Controllers/user.controllers/addCloseFriend.js"
 import removeCloseFriend from "../Controllers/user.controllers/removeCloseFriend.js"
 import getCloseFriends from "../Controllers/user.controllers/getCloseFriends.js"
 import bookmarkPost from "../Controllers/user.controllers/bookmarkPost.js"
+import getBookmarkedposts from "../Controllers/user.controllers/getBookmarkedposts.js"
 
 
 
@@ -109,6 +110,9 @@ router.get("/close-friends", protect, getCloseFriends)
 // for toggle bookmarking a post
 
 router.patch("/bookmark/:postId",protect, bookmarkPost )
+
+//for retrieving the bookmarked post
+router.get('/bookmarks',protect,getBookmarkedposts)
 
 
 

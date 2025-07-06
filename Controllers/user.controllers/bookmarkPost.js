@@ -31,6 +31,7 @@ const bookmarkPost = async (req, res) => {
       // ✅ Bookmark
       await Promise.all([
         User.findByIdAndUpdate(userId, { $addToSet: { bookmarks: postId } }),
+        
         Post.findByIdAndUpdate(postId, { $addToSet: { bookmarkedBy: userId } }),
       ]);
 
