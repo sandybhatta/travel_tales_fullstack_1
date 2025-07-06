@@ -19,6 +19,7 @@ import followingOfUser from "../Controllers/user.controllers/followingOfUser.js"
 import mutualFollowers from "../Controllers/user.controllers/mutualFollowers.js"
 import suggestions from "../Controllers/user.controllers/suggestions.js"
 import addCloseFriend from "../Controllers/user.controllers/addCloseFriend.js"
+import removeCloseFriend from "../Controllers/user.controllers/removeCloseFriend.js"
 
 
 
@@ -85,11 +86,11 @@ router.get("/suggestions",protect, suggestions)
 
 
 // adding a user to my close friend list
-router.post('/close-friends/add/:id',protect,addCloseFriend)
+router.patch('/close-friends/:id',protect,addCloseFriend)
 
 
 
-
+router.delete('/close-friends/:id',protect,removeCloseFriend)
 
 
 
