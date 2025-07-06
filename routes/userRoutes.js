@@ -21,6 +21,7 @@ import suggestions from "../Controllers/user.controllers/suggestions.js"
 import addCloseFriend from "../Controllers/user.controllers/addCloseFriend.js"
 import removeCloseFriend from "../Controllers/user.controllers/removeCloseFriend.js"
 import getCloseFriends from "../Controllers/user.controllers/getCloseFriends.js"
+import bookmarkPost from "../Controllers/user.controllers/bookmarkPost.js"
 
 
 
@@ -97,6 +98,21 @@ router.delete('/close-friends/:id',protect,removeCloseFriend)
 // getting the list of the close
 
 router.get("/close-friends", protect, getCloseFriends)
+
+
+
+
+
+
+
+
+// for toggle bookmarking a post
+
+router.patch("/bookmark/:postId",protect, bookmarkPost )
+
+
+
+
 
 
 
