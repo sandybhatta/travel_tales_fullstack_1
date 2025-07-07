@@ -7,6 +7,26 @@ const tripSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+
+    tags: [
+      {
+        type: String,
+        enum: [
+          "adventure", "beach", "mountain", "city", "honeymoon", "family",
+          "solo", "friends", "luxury", "budget", "wildlife", "roadtrip", "spiritual"
+        ],
+        trim: true,
+        lowercase: true,
+      },
+    ],
+
+    isArchived: { type: Boolean, default: false },
+
+    totalLikes: { type: Number, default: 0 },
+    totalComments: { type: Number, default: 0 },
+
+
+
     title: {
       type: String,
       required: true,
@@ -42,12 +62,86 @@ const tripSchema = new mongoose.Schema(
         },
       },
     ],
-    posts: [
+
+    travelBudget: { type: Number, default: 0 },
+
+    expenses: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Post",
-      },
+        title: String,
+        amount: Number,
+        spentBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        createdAt: { type: Date, default: Date.now }
+      }
     ],
+
+    notes: [
+      {
+        body: { type: String, required: true, trim: true },
+        createdAt: { type: Date, default: Date.now },
+        createdBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User", // useful if collaborators can add notes
+        },
+        isPinned: { type: Boolean, default: false }, // helpful for highlighting
+      }
+    ],
+
+    todoList: [
+      {
+        task: { type: String, required: true, trim: true },
+        done: { type: Boolean, default: false },
+        dueDate: Date,
+        createdBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        assignedTo: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+      }
+    ],
+
+    posts: [
+    {
+        post: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Post",
+          required: true,
+        },
+        addedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+        addedAt: {
+          type: Date,
+          default: Date.now,
+        },
+        captionOverride: {
+          type: String,
+          trim: true,
+          maxlength: 1000,
+        },
+        dayNumber: {
+          type: Number, // e.g., Day 1, Day 2 of the trip
+          min: 1,
+        },
+        boosted: {
+          type: Boolean,
+          default: false, // can be used for trip highlights or XP bonus
+        },
+        highlightedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User", // usually trip owner
+          default: null,
+        },
+    }
+],
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+
+    isCompleted: { type: Boolean, default: false },
+
     visibility: {
         type: String,
         enum: ["public", "followers", "close_friends","private"],
@@ -130,6 +224,39 @@ tripSchema.virtual("isCollaborative").get(function () {
 
 
 //    now instance methods
+
+
+// for adding note
+tripSchema.methods.addNote = function (userId, body) {
+  this.notes.push({ body, createdBy: userId });
+  return this.save();
+};
+
+
+// to pinnig a note
+
+tripSchema.methods.pinNote = function (noteId) {
+  const note = this.notes.id(noteId);
+  if (note) note.isPinned = !note.isPinned;
+  return this.save();
+};
+
+// for adding in todo list
+tripSchema.methods.addTodo = function (userId, task, assignedTo, dueDate) {
+  this.todoList.push({ task, createdBy: userId, assignedTo, dueDate });
+  return this.save();
+};
+
+
+//toggling the todo list
+
+tripSchema.methods.toggleTodo = function (todoId) {
+  const todo = this.todoList.id(todoId);
+  if (todo) todo.done = !todo.done;
+  return this.save();
+};
+
+
 
 
 // is the trip owned by the user

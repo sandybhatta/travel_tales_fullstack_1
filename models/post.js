@@ -14,7 +14,9 @@ const postSchema = new mongoose.Schema(
       type: String,
       maxlength: 1000,
     },
-
+    taggedUsers: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "User" }
+    ],
     // 🏷️ Hashtags
     hashtags: [
       {
@@ -29,10 +31,6 @@ const postSchema = new mongoose.Schema(
       city: String,
       state: String,
       country: String,
-      coordinates: {
-        lat: Number,
-        lng: Number,
-      },
     },
 
     // 🖼️ Media (Images / Videos via Cloudinary)
