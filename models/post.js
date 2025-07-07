@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import cloudinary from "../utils/cloudinary";
 
 const postSchema = new mongoose.Schema(
   {
@@ -125,11 +126,11 @@ postSchema.pre("deleteOne", { document: true }, async function (next) {
     );
   
     // Delete media from Cloudinary
-    // for (let file of this.media) {
-    //   if (file.public_id) {
-    //     await cloudinary.uploader.destroy(file.public_id);
-    //   }
-    // }
+    for (let file of this.media) {
+      if (file.public_id) {
+        await cloudinary.uploader.destroy(file.public_id);
+      }
+    }
   
     next();
   });

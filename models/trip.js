@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
-const tripSchema = new mongoose.Schema(
-  {
+const tripSchema = new mongoose.Schema({
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -23,6 +22,7 @@ const tripSchema = new mongoose.Schema(
     isArchived: { type: Boolean, default: false },
 
     totalLikes: { type: Number, default: 0 },
+    
     totalComments: { type: Number, default: 0 },
 
 

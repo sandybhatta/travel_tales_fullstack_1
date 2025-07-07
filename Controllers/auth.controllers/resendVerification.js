@@ -1,5 +1,5 @@
-import User from "../models/User.js"
-import { sendEmail } from "../utils/transportEmail.js"; 
+import User from "../../models/User.js"
+import { sendEmail } from "../../utils/transportEmail.js"; 
 import {validationResult} from "express-validator";
 
 const resendVerification = async (req, res) => {

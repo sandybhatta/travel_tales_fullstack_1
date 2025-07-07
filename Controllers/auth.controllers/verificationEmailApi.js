@@ -1,6 +1,6 @@
 import crypto from "crypto";
-import User from "../models/User.js";
-import { sendWelcomeEmail } from "../utils/sendWelcomeEmail.js";
+import User from "../../models/User.js";
+import { sendWelcomeEmail } from "../../utils/sendWelcomeEmail.js";
 
 export const verifyEmail = async (req, res) => {
   try {

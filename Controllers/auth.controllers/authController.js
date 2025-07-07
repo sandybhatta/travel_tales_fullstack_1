@@ -1,24 +1,24 @@
 import { validationResult } from "express-validator";
-import User from "../models/User.js";
-import { sendEmail } from "../utils/transportEmail.js"; 
-import { sendOTPEmail } from "../utils/sendOTPemail.js";
-import  OtpToken from "../models/Otp.js";
-import {verifyToken} from "../utils/tokenCreate.js"
-import Token from "../models/token.js"
+import User from "../../models/User.js";
+import { sendEmail } from "../../utils/transportEmail.js"; 
+import { sendOTPEmail } from "../../utils/sendOTPemail.js";
+import  OtpToken from "../../models/Otp.js";
+import {verifyToken} from "../../utils/tokenCreate.js"
+import Token from "../../models/token.js"
 import dotenv from "dotenv"
-import { sendDeactivateEmail } from "../utils/sendDeactivateEmail.js";
+import { sendDeactivateEmail } from "../../utils/sendDeactivateEmail.js";
 
-import {sendPasswordChangedEmail} from "../utils/sendPasswordChanged.js"
+import {sendPasswordChangedEmail} from "../../utils/sendPasswordChanged.js"
 
 
-import {sendReactivationEmail} from "../utils/sendReactivationEmail.js"
+import {sendReactivationEmail} from "../../utils/sendReactivationEmail.js"
 
 
 
 dotenv.config()
 // importing token function of both refresh and access
 
-import { getRefreshToken, getAccessToken } from "../utils/tokenCreate.js";
+import { getRefreshToken, getAccessToken } from "../../utils/tokenCreate.js";
 
 
 
