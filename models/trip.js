@@ -56,10 +56,7 @@ const tripSchema = new mongoose.Schema({
         city: String,
         state: String,
         country: String,
-        coordinates: {
-          lat: Number,
-          lng: Number,
-        },
+        
       },
     ],
 
@@ -67,8 +64,14 @@ const tripSchema = new mongoose.Schema({
 
     expenses: [
       {
-        title: String,
-        amount: Number,
+        title: {
+          type:String,
+          required:true
+        },
+        amount: {
+          type:Number,
+          required:true
+        },
         spentBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         createdAt: { type: Date, default: Date.now }
       }
@@ -76,11 +79,18 @@ const tripSchema = new mongoose.Schema({
 
     notes: [
       {
-        body: { type: String, required: true, trim: true },
-        createdAt: { type: Date, default: Date.now },
+        body: { 
+          type: String,
+           required: true, 
+           trim: true 
+          },
+        createdAt: { 
+          type: Date, 
+          default: Date.now 
+        },
         createdBy: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "User", // useful if collaborators can add notes
+          ref: "User", 
         },
         isPinned: { type: Boolean, default: false }, // helpful for highlighting
       }
@@ -88,8 +98,15 @@ const tripSchema = new mongoose.Schema({
 
     todoList: [
       {
-        task: { type: String, required: true, trim: true },
-        done: { type: Boolean, default: false },
+        task: { 
+          type: String,
+          required: true,
+          trim: true 
+        },
+        done: {
+          type: Boolean,
+          default: false 
+        },
         dueDate: Date,
         createdBy: {
           type: mongoose.Schema.Types.ObjectId,
