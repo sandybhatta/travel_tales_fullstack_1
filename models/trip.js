@@ -148,6 +148,10 @@ const tripSchema = new mongoose.Schema({
           type: Boolean,
           default: false, // can be used for trip highlights or XP bonus
         },
+        isHighlighted: {
+          type: Boolean,
+          default: false,
+        },
         highlightedBy: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User", // usually trip owner
