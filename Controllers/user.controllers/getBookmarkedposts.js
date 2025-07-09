@@ -5,7 +5,7 @@ const getBookmarkedPosts = async (req, res) => {
 
   try {
     const bookmarkedPosts = await Post.find({ _id: { $in: user.bookmarks } })
-      .sort({ createdAt: -1 }) // optional: latest first
+      .sort({ createdAt: -1 })
       .populate([
         {
           path: "author",

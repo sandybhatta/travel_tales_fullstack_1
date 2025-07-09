@@ -316,13 +316,13 @@ tripSchema.methods.canView = async function (user) {
       .lean();
   
     if (this.visibility === "followers") {
-      return TripOwner.followers.some(
+      return TripOwner.followers?.some(
         (followerId) => followerId.toString() === user._id.toString()
       );
     }
   
     if (this.visibility === "close_friends") {
-      return TripOwner.closeFriends.some(
+      return TripOwner.closeFriends?.some(
         (friendId) => friendId.toString() === user._id.toString()
       );
     }
