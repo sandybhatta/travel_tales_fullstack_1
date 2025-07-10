@@ -97,9 +97,16 @@ const createTrip = async (req, res) => {
     }
 
     // 7. Travel budget
-    if (travelBudget) {
-      tripBody.travelBudget = travelBudget;
-    }
+    if(travelBudget){
+
+          
+      const parsedBudget = parseInt(travelBudget);
+      if (isNaN(parsedBudget) || parsedBudget < 0){
+          return res.status(400).json({message:"travel budget should be grater than or equal to 0"})
+       }
+       tripBody.travelBudget=travelBudget
+
+  }
 
     // 8. Destinations
     if (Array.isArray(destinations) && destinations.length > 0) {
