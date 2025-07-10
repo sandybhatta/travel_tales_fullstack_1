@@ -8,6 +8,8 @@ import editTrip from "../Controllers/trip.controllers/editTrip.js";
 import softDeleteTrip from "../Controllers/trip.controllers/softDeleteTrip.js";
 import restoreTrip from "../Controllers/trip.controllers/restoreTrip.js";
 import restoreAllTrip from "../Controllers/trip.controllers/restoreAllTrip.js";
+import softDeleteAll from "../Controllers/trip.controllers/softDeleteAll.js";
+import visibilityChange from "../Controllers/trip.controllers/visibilityChange.js";
 
 
 
@@ -34,14 +36,19 @@ router.patch("/:tripId", protect,upload.single("coverPhoto"), editTrip)
 
 // to soft delete a trip
 
-router.delete("/:tripId",protect,softDeleteTrip)
+router.delete("/:tripId/archive",protect,softDeleteTrip)
 
+// to soft delete all the trips
+router.delete("/archive-all",protect, softDeleteAll)
 
 // to restore a trip
 router.patch("/:tripId/restore",protect, restoreTrip)
 
 //to restore all the trips
 router.patch("/restore-all",protect,restoreAllTrip)
+
+
+router.patch("/:tripId/visibility", protect, visibilityChange)
 
 
 
