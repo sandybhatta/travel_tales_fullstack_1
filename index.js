@@ -9,10 +9,12 @@ import { connectDb } from "./config/db.js";
 import authRoutes from "./routes/authroutes.js"
 import userRoutes from "./routes/userRoutes.js"
 import tripRoutes from "./routes/tripRoutes.js"
+import { scheduleTripCompletion } from "./cronJob/scheduleTripCompletion.js";
 
 
 dotenv.config();
 
+scheduleTripCompletion()
 
 connectDb();
 

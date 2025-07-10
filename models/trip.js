@@ -295,7 +295,7 @@ tripSchema.methods.isFriendInvited = function (userId) {
   };
 // is the friend accepted the trip invitation
 tripSchema.methods.isFriendAccepted = function (userId) {
-    return this.acceptedFriends.some(
+    return this.acceptedFriends?.some(
       (friendId) => friendId.toString() === userId.toString()
     );
   }; 

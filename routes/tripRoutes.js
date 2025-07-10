@@ -10,6 +10,7 @@ import restoreTrip from "../Controllers/trip.controllers/restoreTrip.js";
 import restoreAllTrip from "../Controllers/trip.controllers/restoreAllTrip.js";
 import softDeleteAll from "../Controllers/trip.controllers/softDeleteAll.js";
 import visibilityChange from "../Controllers/trip.controllers/visibilityChange.js";
+import completeTrip from "../Controllers/trip.controllers/completeTrip.js";
 
 
 
@@ -47,11 +48,11 @@ router.patch("/:tripId/restore",protect, restoreTrip)
 //to restore all the trips
 router.patch("/restore-all",protect,restoreAllTrip)
 
-
+//to change visibility of a trip
 router.patch("/:tripId/visibility", protect, visibilityChange)
 
-
-
+// to mark the trip as completed
+router.patch("/:tripId/complete", protect, completeTrip )
 
 
 
