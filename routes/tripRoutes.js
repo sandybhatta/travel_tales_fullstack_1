@@ -70,8 +70,13 @@ router.patch("/:tripId/complete", protect, completeTrip )
 // *** 2 *** Collaboration & Invitations
 
 
-
+// invite a user to a trip
 router.post("/:tripId/invite", protect, inviteToTrip)
+
+// accept an invite to a trip
+router.post("/:tripId/accept", protect, )
+
+
 
 
 

@@ -405,7 +405,10 @@ tripSchema.methods.inviteFriend = async function (userId) {
       );
   
       // Add to acceptedFriends
-      this.acceptedFriends.push(userId);
+      this.acceptedFriends.push({
+        user: userId,
+        acceptedAt: new Date()
+      });
   
       await this.save();
     }
