@@ -12,6 +12,7 @@ import softDeleteAll from "../Controllers/trip.controllers/softDeleteAll.js";
 import visibilityChange from "../Controllers/trip.controllers/visibilityChange.js";
 import completeTrip from "../Controllers/trip.controllers/completeTrip.js";
 import inviteToTrip from "../Controllers/trip.controllers/inviteToTrip.js";
+import acceptToTrip from "../Controllers/trip.controllers/acceptToTrip.js";
 
 
 
@@ -74,7 +75,7 @@ router.patch("/:tripId/complete", protect, completeTrip )
 router.post("/:tripId/invite", protect, inviteToTrip)
 
 // accept an invite to a trip
-router.post("/:tripId/accept", protect, )
+router.post("/:tripId/accept", protect, acceptToTrip)
 
 
 
