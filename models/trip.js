@@ -296,7 +296,7 @@ tripSchema.methods.isFriendInvited = function (userId) {
 // is the friend accepted the trip invitation
 tripSchema.methods.isFriendAccepted = function (userId) {
     return this.acceptedFriends?.some(
-      (friendId) => friendId.toString() === userId.toString()
+      (friend) => friend.user.toString() === userId.toString()
     );
   }; 
   
@@ -395,7 +395,7 @@ tripSchema.methods.inviteFriend = async function (userId) {
       (id) => id.toString() === userId.toString()
     );
     const alreadyAccepted = this.acceptedFriends.some(
-      (id) => id.toString() === userId.toString()
+      (id) => id.user.toString() === userId.toString()
     );
   
     if (wasInvited && !alreadyAccepted) {

@@ -13,6 +13,7 @@ import visibilityChange from "../Controllers/trip.controllers/visibilityChange.j
 import completeTrip from "../Controllers/trip.controllers/completeTrip.js";
 import inviteToTrip from "../Controllers/trip.controllers/inviteToTrip.js";
 import acceptToTrip from "../Controllers/trip.controllers/acceptToTrip.js";
+import removeCollaborator from "../Controllers/trip.controllers/removeCollaborator.js";
 
 
 
@@ -76,6 +77,12 @@ router.post("/:tripId/invite", protect, inviteToTrip)
 
 // accept an invite to a trip
 router.post("/:tripId/accept", protect, acceptToTrip)
+
+
+// remove a collaborator from trip by the owner
+
+router.delete("/:tripId/collaborators/:userId",protect, removeCollaborator)
+
 
 
 
