@@ -1,4 +1,4 @@
-import Trip from "../../models/trip";
+import Trip from "../../models/trip.js";
 
 const restoreTrip = async (req,res)=>{
 

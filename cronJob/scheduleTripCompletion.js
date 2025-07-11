@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import Trip from "../models/trip";
+import Trip from "../models/trip.js";
 
 export const scheduleTripCompletion = () => {
   cron.schedule("0 1 * * *", async () => {

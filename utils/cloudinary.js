@@ -13,7 +13,7 @@ cloudinary.config({
 
 // ✅ Optional: Confirm config (only in dev mode)
 if (process.env.NODE_ENV === 'development') {
-  console.log('📦 Cloudinary Configured:', cloudinary.config());
+  console.log('📦 Cloudinary Configured:');
 }
 
 // ✅ Reusable upload from buffer using stream

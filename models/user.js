@@ -15,7 +15,8 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      minLength:3
+      minLength:3,
+      index:true,
     },
     usernameChangedAt:{
       type:Date,
@@ -26,6 +27,7 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      index:true,
     },
     resgistersAt:Date,
     pendingEmail: {
@@ -211,8 +213,7 @@ const userSchema = new mongoose.Schema(
 
 
 // indexing for frequest search
-userSchema.index({ username: 1 });
-userSchema.index({ email: 1 });
+
 userSchema.index({ followers: 1 });
 userSchema.index({ following: 1 });
 

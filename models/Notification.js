@@ -6,7 +6,7 @@ const notificationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
+     
     },
     sender: {
       type: mongoose.Schema.Types.ObjectId,
@@ -89,28 +89,6 @@ const notificationSchema = new mongoose.Schema(
 
 // Auto-delete expired notifications (if needed)
 notificationSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

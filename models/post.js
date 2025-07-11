@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import cloudinary from "../utils/cloudinary";
+import cloudinary from "../utils/cloudinary.js";
 
 const postSchema = new mongoose.Schema(
   {

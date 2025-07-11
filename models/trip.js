@@ -382,8 +382,9 @@ tripSchema.methods.inviteFriend = async function (userId) {
       this.invitedFriends.push(userId);
       await this.save();
     }
+    console.log("Monkey d luffy")
   
-    return this;
+  
   };
 
   // to accept a trip invitation and remove from invitedFriends
