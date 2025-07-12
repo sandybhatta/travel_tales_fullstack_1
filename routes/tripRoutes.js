@@ -16,6 +16,7 @@ import acceptToTrip from "../Controllers/trip.controllers/acceptToTrip.js";
 import removeCollaborator from "../Controllers/trip.controllers/removeCollaborator.js";
 import getCollaboratorsOfTrip from "../Controllers/trip.controllers/getCollaboratorsOfTrip.js";
 import getinvitedsOfTrip from "../Controllers/trip.controllers/getInvitedsOfTrip.js";
+import removeInvite from "../Controllers/trip.controllers/removeInvite.js";
 
 
 
@@ -82,19 +83,21 @@ router.post("/:tripId/accept", protect, acceptToTrip)
 
 
 
-// get the list of accepted friends for a trip where the user is owner
+// 1.get the list of accepted friends for a trip where the user is owner
 router.get("/:tripId/collaborators",protect, getCollaboratorsOfTrip)
 
 
-// remove a collaborator from trip by the owner
-
+// 2.remove a collaborator from trip by the owner
 router.delete("/:tripId/collaborators/:userId",protect, removeCollaborator)
 
 
-// get all the invited friends of a trip
+// 3. get all the invited friends of a trip by the owner
 router.get("/:tripId/invited", protect, getinvitedsOfTrip)
 
 
+
+// 4. to delete a invited Friend to a trip by the owner
+router.delete("/:tripId/invited/:userId", protect, removeInvite)
 
 
 
