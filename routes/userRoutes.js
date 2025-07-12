@@ -26,6 +26,7 @@ import getBookmarkedposts from "../Controllers/user.controllers/getBookmarkedpos
 import searchMentionableUser from "../Controllers/user.controllers/searchMentionableUser.js"
 import getAllInvitedTrips from "../Controllers/user.controllers/getAllInvitedTrips.js"
 import getAllAcceptedTrips from "../Controllers/user.controllers/getAllAcceptedTrips.js"
+import rejectInvitation from "../Controllers/user.controllers/rejectInvitation.js"
 
 
 
@@ -130,6 +131,7 @@ router.get("/invited-trips",protect,getAllInvitedTrips)
 
 
 // api for rejecting the trips that the user was invited (not built)
+router.delete("/:tripId/reject-invitation", protect, rejectInvitation)
 
 // to get the list of all accepted trips
 router.get("/accepted-trips", protect, getAllAcceptedTrips)
