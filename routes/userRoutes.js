@@ -130,7 +130,7 @@ router.get('/search-mentions', protect , searchMentionableUser)
 router.get("/invited-trips",protect,getAllInvitedTrips)
 
 
-// api for rejecting the trips that the user was invited (not built)
+// api for rejecting the trips that the user was invited 
 router.delete("/:tripId/reject-invitation", protect, rejectInvitation)
 
 // to get the list of all accepted trips

@@ -1,5 +1,5 @@
-import Trip from "../../models/trip";
-import User from "../../models/User";
+import Trip from "../../models/trip.js";
+import User from "../../models/User.js";
 
 const removeCollaborator = async (req, res) => {
   const { tripId, userId } = req.params;

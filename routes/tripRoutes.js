@@ -17,6 +17,7 @@ import removeCollaborator from "../Controllers/trip.controllers/removeCollaborat
 import getCollaboratorsOfTrip from "../Controllers/trip.controllers/getCollaboratorsOfTrip.js";
 import getinvitedsOfTrip from "../Controllers/trip.controllers/getInvitedsOfTrip.js";
 import removeInvite from "../Controllers/trip.controllers/removeInvite.js";
+import tripsOfUser from "../Controllers/trip.controllers/tripsOfUser.js";
 
 
 
@@ -103,6 +104,11 @@ router.delete("/:tripId/invited/:userId", protect, removeInvite)
 
 
 
+// *** trip discovery and filtering
+
+
+
+router.get("/user/:userId", protect, tripsOfUser)
 
 
 
