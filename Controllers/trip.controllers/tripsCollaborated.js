@@ -16,9 +16,9 @@ const tripsOfUser = async (req, res) => {
       return res.status(404).json({ message: "User not found." });
     }
 
-    const allTrips = await Trip.find({$or:[
+    const allTrips = await Trip.find(
         { acceptedFriends: userId }
-    ]});
+    ).populate("user","name username avatar");
 
     if (allTrips.length === 0) {
       return res.status(200).json({ message: "No trips found for this user." });

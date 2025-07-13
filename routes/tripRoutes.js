@@ -19,6 +19,7 @@ import getinvitedsOfTrip from "../Controllers/trip.controllers/getInvitedsOfTrip
 import removeInvite from "../Controllers/trip.controllers/removeInvite.js";
 import tripsOfUser from "../Controllers/trip.controllers/tripsOfUser.js";
 import tripsCollaborated from "../Controllers/trip.controllers/tripsCollaborated.js";
+import viewableTrip from "../Controllers/trip.controllers/virewableTrip.js";
 
 
 
@@ -111,11 +112,12 @@ router.delete("/:tripId/invited/:userId", protect, removeInvite)
 // to see the trip list of a user where he is owner (useful for self or others)
 router.get("/:userId/own-trip", protect, tripsOfUser)
 
-// trips where user is the collaborator
+// trips where user is the collaborator (useful for self or others)
 router.get("/:userId/collaborated-trip", protect, tripsCollaborated)
 
 
-
+//all viewable trips fo me
+router.get("/visible", protect, viewableTrip)
 
 
 
