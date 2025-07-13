@@ -20,6 +20,7 @@ import removeInvite from "../Controllers/trip.controllers/removeInvite.js";
 import tripsOfUser from "../Controllers/trip.controllers/tripsOfUser.js";
 import tripsCollaborated from "../Controllers/trip.controllers/tripsCollaborated.js";
 import viewableTrip from "../Controllers/trip.controllers/virewableTrip.js";
+import getPublicTrips from "../Controllers/trip.controllers/getPublicTrips.js";
 
 
 
@@ -118,6 +119,9 @@ router.get("/:userId/collaborated-trip", protect, tripsCollaborated)
 
 //all viewable trips fo me
 router.get("/visible", protect, viewableTrip)
+
+// public explore feed for logged out users also
+router.get("/public", getPublicTrips)
 
 
 
