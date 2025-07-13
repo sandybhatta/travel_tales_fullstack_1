@@ -17,7 +17,7 @@ const tripsOfUser = async (req, res) => {
     }
 
     const allTrips = await Trip.find({$or:[
-        { user: userId }
+        { acceptedFriends: userId }
     ]});
 
     if (allTrips.length === 0) {
@@ -48,7 +48,7 @@ const tripsOfUser = async (req, res) => {
     return res.status(200).json({ trips: visibleTrips, count: visibleTrips.length });
 
   } catch (error) {
-    console.error("Error in tripsOfUser:", error);
+    
     return res.status(500).json({ message: "Internal server error." });
   }
 };
