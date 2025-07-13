@@ -21,6 +21,7 @@ import tripsOfUser from "../Controllers/trip.controllers/tripsOfUser.js";
 import tripsCollaborated from "../Controllers/trip.controllers/tripsCollaborated.js";
 import viewableTrip from "../Controllers/trip.controllers/virewableTrip.js";
 import getPublicTrips from "../Controllers/trip.controllers/getPublicTrips.js";
+import getTripsByTagname from "../Controllers/trip.controllers/getTripsByTag.js";
 
 
 
@@ -123,6 +124,8 @@ router.get("/visible", protect, viewableTrip)
 // public explore feed for logged out users also
 router.get("/public", getPublicTrips)
 
+// get trips by tag
+router.get("/tag/:tagname", protect, getTripsByTagname)
 
 
 

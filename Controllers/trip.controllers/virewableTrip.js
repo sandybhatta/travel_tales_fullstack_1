@@ -52,7 +52,7 @@ const viewableTrip = async (req, res) => {
       baseQuery.$and.push({
         $or: [
           { title: { $regex: search, $options: "i" } },
-          { destination: { $regex: search, $options: "i" } }
+          { destinations: { $regex: search, $options: "i" } }
         ]
       });
     }

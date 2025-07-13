@@ -20,7 +20,7 @@ const getPublicTrips = async (req, res) => {
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: "i" } },
-        { destination: { $regex: search, $options: "i" } }
+        { destinations: { $regex: search, $options: "i" } }
       ];
     }
 
@@ -37,7 +37,7 @@ const getPublicTrips = async (req, res) => {
       .sort(sortOption)
       .skip(skip)
       .limit(limit)
-      .populate("creator", "username profilePic")
+      .populate("user", "name username avatar")
       .select("-__v");
 
     const totalCount = await Trip.countDocuments(query);
