@@ -22,6 +22,7 @@ import tripsCollaborated from "../Controllers/trip.controllers/tripsCollaborated
 import viewableTrip from "../Controllers/trip.controllers/virewableTrip.js";
 import getPublicTrips from "../Controllers/trip.controllers/getPublicTrips.js";
 import getTripsByTagname from "../Controllers/trip.controllers/getTripsByTag.js";
+import discoverFeed from "../Controllers/trip.controllers/discoverFeed.js";
 
 
 
@@ -126,6 +127,9 @@ router.get("/public", getPublicTrips)
 
 // get trips by tag
 router.get("/tag/:tagname", protect, getTripsByTagname)
+
+//feed api
+router.get("/discover/feed",protect, discoverFeed)
 
 
 
