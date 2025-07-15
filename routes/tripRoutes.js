@@ -23,6 +23,7 @@ import viewableTrip from "../Controllers/trip.controllers/virewableTrip.js";
 import getPublicTrips from "../Controllers/trip.controllers/getPublicTrips.js";
 import getTripsByTagname from "../Controllers/trip.controllers/getTripsByTag.js";
 import discoverFeed from "../Controllers/trip.controllers/discoverFeed.js";
+import getArchivedTrips from "../Controllers/trip.controllers/getArchivedTrips.js";
 
 
 
@@ -57,6 +58,8 @@ router.delete("/:tripId/archive",protect,softDeleteTrip)
 // to soft delete all the trips
 router.delete("/archive-all",protect, softDeleteAll)
 
+// get all the archived trips
+router.get("/archived",protect,getArchivedTrips)
 // to restore a trip
 router.patch("/:tripId/restore",protect, restoreTrip)
 
@@ -128,8 +131,26 @@ router.get("/public", getPublicTrips)
 // get trips by tag
 router.get("/tag/:tagname", protect, getTripsByTagname)
 
-//feed api
+//feed api(not built fully + search)
 router.get("/discover/feed",protect, discoverFeed)
+
+
+
+
+
+
+//  Trip Timeline & Status
+
+
+
+
+
+
+
+
+
+
+
 
 
 
