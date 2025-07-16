@@ -26,6 +26,7 @@ import discoverFeed from "../Controllers/trip.controllers/discoverFeed.js";
 import getArchivedTrips from "../Controllers/trip.controllers/getArchivedTrips.js";
 import upcomingTrips from "../Controllers/trip.controllers/upcomingTrips.js";
 import onGoingTrips from "../Controllers/trip.controllers/onGoingTrips.js";
+import pastTrips from "../Controllers/trip.controllers/pastTrips.js";
 
 
 
@@ -149,6 +150,9 @@ router.get("/status/upcoming",protect, upcomingTrips)
 
 //to get all the ongoing trips
 router.get("/status/ongoing", protect, onGoingTrips)
+
+//to get the past trips
+router.get("/status/past", protect, pastTrips)
 
 
 
