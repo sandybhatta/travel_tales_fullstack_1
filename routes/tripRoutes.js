@@ -141,8 +141,9 @@ router.get("/discover/feed",protect, discoverFeed)
 
 //  Trip Timeline & Status
 
+// to get all the upcoming trips
 
-
+router.get("/status/upcoming",protect, )
 
 
 
