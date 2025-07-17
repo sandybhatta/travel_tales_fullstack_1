@@ -32,6 +32,7 @@ import getPostsOfTrip from "../Controllers/trip.controllers/getPostsOfTrip.js";
 import deletePostOfTrip from "../Controllers/trip.controllers/deltePostOfTrip.js";
 import highlightPost from "../Controllers/trip.controllers/highlightPost.js";
 import toggleLike from "../Controllers/trip.controllers/toggleLikeTrip.js";
+import getLikesOfTrip from "../Controllers/trip.controllers/getLikesOfTrip.js";
 
 
 
@@ -184,7 +185,8 @@ router.patch("/:tripId/posts/:postId/highlight",protect, highlightPost)
 router.post("/:tripId/like",protect, toggleLike)
 
 
-
+// get users who liked the trip
+router.get("/:tripId/likes",protect, getLikesOfTrip)
 
 
 
