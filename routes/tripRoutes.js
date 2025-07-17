@@ -31,6 +31,7 @@ import addPostToTrip from "../Controllers/trip.controllers/addPostToTrip.js";
 import getPostsOfTrip from "../Controllers/trip.controllers/getPostsOfTrip.js";
 import deletePostOfTrip from "../Controllers/trip.controllers/deltePostOfTrip.js";
 import highlightPost from "../Controllers/trip.controllers/highlightPost.js";
+import toggleLike from "../Controllers/trip.controllers/toggleLikeTrip.js";
 
 
 
@@ -180,7 +181,7 @@ router.delete("/:tripId/posts/:postId", protect, deletePostOfTrip)
 router.patch("/:tripId/posts/:postId/highlight",protect, highlightPost)
 
 // for toggle like a trip
-
+router.post("/:tripId/like",protect, toggleLike)
 
 
 
