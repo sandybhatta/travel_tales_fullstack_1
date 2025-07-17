@@ -28,6 +28,8 @@ import upcomingTrips from "../Controllers/trip.controllers/upcomingTrips.js";
 import onGoingTrips from "../Controllers/trip.controllers/onGoingTrips.js";
 import pastTrips from "../Controllers/trip.controllers/pastTrips.js";
 import addPostToTrip from "../Controllers/trip.controllers/addPostToTrip.js";
+import getPostsOfTrip from "../Controllers/trip.controllers/getPostsOfTrip.js";
+import deletePostOfTrip from "../Controllers/trip.controllers/deltePostOfTrip.js";
 
 
 
@@ -160,10 +162,16 @@ router.get("/status/past", protect, pastTrips)
 // for adding posts in a trip
 router.post("/:tripId/posts",protect, addPostToTrip)
 
+//for getting all the post and related information of a trip( as i i have done for getting info for a trip id earlier +might build it later)
+
+//🕒 router.get("/:tripId/posts",protect, getPostsOfTrip)
 
 
 
 
+// for deleting a post from a trip
+
+router.delete("/:tripId/posts/:postId", protect, deletePostOfTrip)
 
 
 
