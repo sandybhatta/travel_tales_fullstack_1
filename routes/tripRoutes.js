@@ -34,6 +34,7 @@ import highlightPost from "../Controllers/trip.controllers/highlightPost.js";
 import toggleLike from "../Controllers/trip.controllers/toggleLikeTrip.js";
 import getLikesOfTrip from "../Controllers/trip.controllers/getLikesOfTrip.js";
 import addExpensesTrip from "../Controllers/trip.controllers/addExpensesTrip.js";
+import getExpensesTrip from "../Controllers/trip.controllers/getExpensesTrip.js";
 
 
 
@@ -198,8 +199,10 @@ router.get("/:tripId/likes",protect, getLikesOfTrip)
 //7. Expense Management
 
 // adding expenses to a trip
-router.post("/:tripId/expenses",protect, addExpensesTrip)
+router.post("/:tripId/expenses",protect , addExpensesTrip)
 
+// getting the list of expenses of a trip
+router.get("/:tripId/expenses", protect , getExpensesTrip) 
 
 
 
