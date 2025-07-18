@@ -35,6 +35,7 @@ import toggleLike from "../Controllers/trip.controllers/toggleLikeTrip.js";
 import getLikesOfTrip from "../Controllers/trip.controllers/getLikesOfTrip.js";
 import addExpensesTrip from "../Controllers/trip.controllers/addExpensesTrip.js";
 import getExpensesTrip from "../Controllers/trip.controllers/getExpensesTrip.js";
+import deleteExpense from "../Controllers/trip.controllers/deleteExpense.js";
 
 
 
@@ -204,7 +205,7 @@ router.post("/:tripId/expenses",protect , addExpensesTrip)
 // getting the list of expenses of a trip
 router.get("/:tripId/expenses", protect , getExpensesTrip) 
 
-
+router.delete(":tripId/expenses/:expenseId", protect, deleteExpense)
 
 
 
