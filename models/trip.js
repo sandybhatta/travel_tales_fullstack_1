@@ -90,7 +90,10 @@ const tripSchema = new mongoose.Schema({
           type:Number,
           required:true
         },
-        spentBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        spentBy: { 
+          type: mongoose.Schema.Types.ObjectId, 
+          ref: "User" 
+        },
         createdAt: { type: Date, default: Date.now }
       }
     ],
