@@ -57,8 +57,10 @@ const inviteToTrip = async (req, res) => {
       InvitationSent: true,
     });
   } catch (error) {
-    console.error("Error in inviteToTrip:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 

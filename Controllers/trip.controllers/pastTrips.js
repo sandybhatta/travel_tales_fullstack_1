@@ -20,7 +20,10 @@ const pastTrips = async (req, res) => {
     });
   } catch (error) {
   
-    return res.status(500).json({ message: "Server error", error: error.message });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 

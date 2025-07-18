@@ -51,11 +51,10 @@ export const deleteExpense = async (req, res) => {
       remainingExpenses: trip.expenses,
     });
   } catch (error) {
-    console.error("Error deleting expense:", error);
     return res.status(500).json({
-      success: false,
-      message: "Server error. Could not delete expense.",
-    });
+        message: "Internal Server Error",
+        error: error.message,
+      });
   }
 };
 

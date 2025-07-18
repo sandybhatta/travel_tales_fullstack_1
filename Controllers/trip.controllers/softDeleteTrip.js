@@ -31,7 +31,10 @@ try {
     return res.status(200).json({message:"This trip is soft deleted successfully."})
 
 } catch (error) {
-    return res.status(500).json({message:"Internal server error"})
+    return res.status(500).json({
+        message: "Internal Server Error",
+        error: error.message,
+      });
 }
 }
 

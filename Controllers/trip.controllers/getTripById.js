@@ -167,8 +167,10 @@ const getTripById = async (req, res) => {
     res.status(200).json({ trip: tripData });
 
   } catch (error) {
-    console.error("Error fetching trip by ID:", error);
-    res.status(500).json({ message: "Server error" });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 

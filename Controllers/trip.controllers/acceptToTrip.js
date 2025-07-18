@@ -42,8 +42,11 @@ const acceptToTrip = async (req, res) => {
       .json({ message: "Trip invitation accepted successfully." });
 
   } catch (error) {
-    console.error("Trip invitation error:", error);
-    return res.status(500).json({ message: "Internal server error." });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
+
   }
 };
 

@@ -153,8 +153,10 @@ const createTrip = async (req, res) => {
 
     return res.status(201).json({ message: "Trip created successfully", trip: newTrip.toJSON() });
   } catch (error) {
-    console.error("Error in creating trip:", error);
-    return res.status(500).json({ message: "Something went wrong", error: error.message });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 

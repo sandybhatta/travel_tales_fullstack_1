@@ -18,10 +18,9 @@ const getArchivedTrips = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Error in getArchivedTrips:", error);
     return res.status(500).json({
-      success: false,
-      message: "Internal server error",
+      message: "Internal Server Error",
+      error: error.message,
     });
   }
 };

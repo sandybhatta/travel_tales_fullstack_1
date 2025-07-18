@@ -43,8 +43,10 @@ const highlightPost = async (req, res) => {
       highlightedBy: postObj.highlightedBy,
     });
   } catch (error) {
-    console.error("Highlight error:", error);
-    return res.status(500).json({ message: "Internal server error." });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 

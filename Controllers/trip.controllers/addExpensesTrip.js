@@ -62,8 +62,10 @@ const addExpensesTrip = async (req, res) => {
       expense: trip.expenses[trip.expenses.length - 1],
     });
   } catch (error) {
-    console.error("Error in addExpensesTrip:", error);
-    return res.status(500).json({ message: "Internal server error." });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 

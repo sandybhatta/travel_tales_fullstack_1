@@ -37,8 +37,10 @@ const getCollaboratorsOfTrip = async (req, res) => {
       isOwner,
     });
   } catch (error) {
-    console.error("Error fetching trip collaborators:", error);
-    return res.status(500).json({ success: false, message: "Internal Server Error" });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 

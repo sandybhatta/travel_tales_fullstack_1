@@ -32,10 +32,10 @@ const getExpensesTrip = async (req, res) => {
       totalExpenses,
     });
   } catch (error) {
-    console.error("getExpensesTrip error:", error);
-    return res
-      .status(500)
-      .json({ message: "Internal Server Error", error: error.message });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 

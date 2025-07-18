@@ -36,8 +36,10 @@ const removeInvite = async (req, res) => {
       message: "The user was successfully removed from the invited list.",
     });
   } catch (error) {
-    console.error("Error in removeInvite:", error);
-    return res.status(500).json({ message: "Internal Server Error." });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 

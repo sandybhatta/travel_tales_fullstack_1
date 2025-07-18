@@ -54,8 +54,10 @@ const getTripsByTagname = async (req, res) => {
       trips: viewableTrips,
     });
   } catch (error) {
-    console.error("Error fetching trips by tag:", error);
-    res.status(500).json({ message: "Server error" });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 

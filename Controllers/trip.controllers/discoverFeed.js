@@ -175,8 +175,10 @@ const discoverFeed = async (req, res) => {
       hasMore: fullFeed.length > filteredFeed.length
     });
   } catch (err) {
-    console.error("Discover Feed Error:", err);
-    res.status(500).json({ message: "Server error while generating feed" });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 

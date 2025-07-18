@@ -85,8 +85,10 @@ const viewableTrip = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("❌ Error in /api/trips/visible:", error);
-    res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 

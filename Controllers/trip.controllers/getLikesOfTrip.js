@@ -28,8 +28,10 @@ const getLikesOfTrip = async (req, res) => {
       likes: formattedLikes,
     });
   } catch (error) {
-    console.error("Error fetching likes:", error);
-    return res.status(500).json({ message: "Server error while fetching likes" });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 

@@ -43,8 +43,10 @@ const deletePostOfTrip = async (req, res) => {
     return res.status(200).json({ message: "Post removed successfully from the trip." });
 
   } catch (error) {
-    console.error("Error deleting post from trip:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 

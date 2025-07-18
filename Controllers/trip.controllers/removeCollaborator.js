@@ -33,8 +33,10 @@ const removeCollaborator = async (req, res) => {
 
     return res.status(200).json({ message: "Collaborator removed successfully" });
   } catch (error) {
-    console.error("Error removing collaborator:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 

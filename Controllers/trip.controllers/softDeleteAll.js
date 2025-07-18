@@ -28,8 +28,10 @@ const softDeleteAll = async (req, res) => {
       archivedCount: count,
     });
   } catch (error) {
-    console.error("Error in softDeleteAll:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 
