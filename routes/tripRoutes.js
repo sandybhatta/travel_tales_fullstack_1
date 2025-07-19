@@ -37,6 +37,7 @@ import addExpensesTrip from "../Controllers/trip.controllers/addExpensesTrip.js"
 import getExpensesTrip from "../Controllers/trip.controllers/getExpensesTrip.js";
 import deleteExpense from "../Controllers/trip.controllers/deleteExpense.js";
 import addNote from "../Controllers/trip.controllers/addNote.js";
+import getNotes from "../Controllers/trip.controllers/getNotes.js";
 
 
 
@@ -212,7 +213,13 @@ router.delete(":tripId/expenses/:expenseId", protect, deleteExpense)
 
 // 8.Notes System
 
+
+// to add a note to a trip
 router.post("/:tripId/notes", protect, addNote)
+
+
+//to get all the post from a trip
+router.get("/:tripId/notes", protect, getNotes)
 
 
 
