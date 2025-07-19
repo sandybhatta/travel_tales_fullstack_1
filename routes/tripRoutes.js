@@ -229,8 +229,8 @@ router.delete("/:tripId/notes/:noteId/pin" , protect , deleteNote)
 
 
 
-
-
+// pin unpin a note
+router.patch("/:tripId/notes/:noteId/pin" , protect ,)
 
 
 

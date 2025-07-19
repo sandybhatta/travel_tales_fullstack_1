@@ -1,33 +1,29 @@
 import Trip from "../../models/trip.js";
 
-const deleteNote = async()=>{
-
-    const { tripId , noteId } =req.params;
-    const { user } =req;
+const pinUnpinNote = async (req,res)=>{
 
     try {
+        
+        const { tripId , noteId } = req.params;
+        const { user } = req;
         
         const trip = await Trip.findById(tripId);
         if(!trip){
             return res.status(404).json({message:"No trip found"})
         }
         const isOwner = trip.isOwnedBy(user._id);
+        const isCollaborator = trip.isFriendAccepted(user._id);
 
+        if(!isOwner && !isCollaborator){
+            return res.status(403).json({message:"Only owner or collaborator can pin and unpin a post"})
+        }
         const note = trip.notes.find(note => note._id.toString() === noteId);
-        
+
         if(!note){
-            return res.status(404).json({message:"Note not Found"})
+            return res.status(404).json({message:"No note found"})
         }
-
-        const isCreatedBy = note.createdBy.toString() === user._id.toString()
-
-        if(!isOwner && !isCreatedBy){
-            return res.status(403).json({message:"Only the trip owner or the colaborator who created the note can delete the note"})
-        }
-
-        trip.notes = trip.notes.filter(note=>note._id.toString() !== noteId);
-
-        await trip.save();
+        note.isPinned =!note.isPinned;
+        await trip.save()
 
         return res.status(200).json({
             success:true,
@@ -45,6 +41,5 @@ const deleteNote = async()=>{
             error: error.message, 
           });
     }
-
 }
-export default deleteNote
+export default pinUnpinNote
