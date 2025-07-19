@@ -41,6 +41,7 @@ import getNotes from "../Controllers/trip.controllers/getNotes.js";
 import deleteNote from "../Controllers/trip.controllers/deleteNote.js";
 import pinUnpinNote from "../Controllers/trip.controllers/pinUnpinNote.js";
 import addTodo from "../Controllers/trip.controllers/addTodo.js";
+import getTodo from "../Controllers/trip.controllers/getTodo.js";
 
 
 
@@ -246,9 +247,11 @@ router.patch("/:tripId/notes/:noteId/pin" , protect ,pinUnpinNote)
 
 // 9. Todo List / Planning
 
-
+// adding todo in a trip
 router.post("/:tripId/todos" ,  protect, addTodo)
 
+// list todo of trip
+router.get("/:tripId/todos" , protect , getTodo)
 
 
 
