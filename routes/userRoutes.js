@@ -53,7 +53,7 @@ router.delete("/delete",protect, deleteUser)
 
 // to update the profile
 
-router.patch("/update-profile",protect,updateProfile)
+router.patch("/update-profile",protect, upload.single("avatar"), updateProfile)
 
 
 // to change the username
@@ -63,7 +63,7 @@ router.patch("/change-username",protect, changeusername)
 
 
 // to change and verify email change
-router.patch("change-email",protect,changeEmail)
+router.patch("/change-email",protect,changeEmail)
 
 router.post("/verify-email-change",protect,verifyEmailChange)
 

@@ -1,8 +1,8 @@
 import express from "express"
-
 import { protect } from "../middlewares/authMiddleware.js"
+import { upload } from "../middlewares/multer.js"
+
 import createTrip from "../Controllers/trip.controllers/createTrip.js";
-import {upload} from "../middlewares/multer.js"
 import getTripById from "../Controllers/trip.controllers/getTripById.js";
 import editTrip from "../Controllers/trip.controllers/editTrip.js";
 import softDeleteTrip from "../Controllers/trip.controllers/softDeleteTrip.js";
@@ -28,7 +28,7 @@ import upcomingTrips from "../Controllers/trip.controllers/upcomingTrips.js";
 import onGoingTrips from "../Controllers/trip.controllers/onGoingTrips.js";
 import pastTrips from "../Controllers/trip.controllers/pastTrips.js";
 import addPostToTrip from "../Controllers/trip.controllers/addPostToTrip.js";
-import getPostsOfTrip from "../Controllers/trip.controllers/getPostsOfTrip.js";
+
 import deletePostOfTrip from "../Controllers/trip.controllers/deltePostOfTrip.js";
 import highlightPost from "../Controllers/trip.controllers/highlightPost.js";
 import toggleLike from "../Controllers/trip.controllers/toggleLikeTrip.js";
@@ -45,238 +45,85 @@ import getTodo from "../Controllers/trip.controllers/getTodo.js";
 import toggleTodo from "../Controllers/trip.controllers/toggleTodo.js";
 import deleteTodo from "../Controllers/trip.controllers/deleteTodo.js";
 
+//import getPostsOfTrip from "../Controllers/trip.controllers/getPostsOfTrip.js";
 
 
+const router = express.Router();
 
 
+// ✅ STATIC / SPECIFIC ROUTES FIRST
 
-const router = express.Router()
+router.get("/status/upcoming", protect, upcomingTrips);
+router.get("/status/ongoing", protect, onGoingTrips);
+router.get("/status/past", protect, pastTrips);
 
+router.get("/archived", protect, getArchivedTrips);
+router.delete("/archive-all", protect, softDeleteAll);
+router.patch("/restore-all", protect, restoreAllTrip);
 
+router.get("/visible", protect, viewableTrip);
+router.get("/public", getPublicTrips);
+router.get("/discover/feed", protect, discoverFeed);
+router.get("/tag/:tagname", protect, getTripsByTagname);
 
-// *** 1 *** Core Trip Management (CRUD + Lifecycle) APIs
+router.get("/:userId/own-trip", protect, tripsOfUser);
+router.get("/:userId/collaborated-trip", protect, tripsCollaborated);
 
 
+// ✅ CREATE TRIP
+router.post("/", protect, upload.single("coverPhoto"), createTrip);
 
-// to create a trip
-router.post("/", protect,upload.single("coverPhoto") ,createTrip)
 
+// ✅ COLLABORATION & INVITATIONS
+router.post("/:tripId/invite", protect, inviteToTrip);
+router.post("/:tripId/accept", protect, acceptToTrip);
+router.get("/:tripId/collaborators", protect, getCollaboratorsOfTrip);
+router.delete("/:tripId/collaborators/:userId", protect, removeCollaborator);
+router.get("/:tripId/invited", protect, getinvitedsOfTrip);
+router.delete("/:tripId/invited/:userId", protect, removeInvite);
 
-//to get the details about a trip
 
-router.get("/:tripId", protect , getTripById)
+// ✅ POSTS
+router.post("/:tripId/posts", protect, addPostToTrip);
+router.delete("/:tripId/posts/:postId", protect, deletePostOfTrip);
+router.patch("/:tripId/posts/:postId/highlight", protect, highlightPost);
 
-// to edit trip info
 
-router.patch("/:tripId", protect,upload.single("coverPhoto"), editTrip)
+// ✅ LIKES
+router.post("/:tripId/like", protect, toggleLike);
+router.get("/:tripId/likes", protect, getLikesOfTrip);
 
 
-// to soft delete a trip
+// ✅ EXPENSES
+router.post("/:tripId/expenses", protect, addExpensesTrip);
+router.get("/:tripId/expenses", protect, getExpensesTrip);
+router.delete("/:tripId/expenses/:expenseId", protect, deleteExpense);
 
-router.delete("/:tripId/archive",protect,softDeleteTrip)
 
-// to soft delete all the trips
-router.delete("/archive-all",protect, softDeleteAll)
+// ✅ NOTES
+router.post("/:tripId/notes", protect, addNote);
+router.get("/:tripId/notes", protect, getNotes);
+router.delete("/:tripId/notes/:noteId", protect, deleteNote);
+router.patch("/:tripId/notes/:noteId/pin", protect, pinUnpinNote);
 
-// get all the archived trips
-router.get("/archived",protect,getArchivedTrips)
-// to restore a trip
-router.patch("/:tripId/restore",protect, restoreTrip)
 
-//to restore all the trips
-router.patch("/restore-all",protect,restoreAllTrip)
+// ✅ TODOs
+router.post("/:tripId/todos", protect, addTodo);
+router.get("/:tripId/todos", protect, getTodo);
+router.patch("/:tripId/todos/:todoId/toggle", protect, toggleTodo);
+router.delete("/:tripId/todos/:todoId", protect, deleteTodo);
 
-//to change visibility of a trip
-router.patch("/:tripId/visibility", protect, visibilityChange)
 
-// to mark the trip as completed
-router.patch("/:tripId/complete", protect, completeTrip )
+// ✅ TRIP LIFE-CYCLE
+router.patch("/:tripId", protect, upload.single("coverPhoto"), editTrip);
+router.patch("/:tripId/restore", protect, restoreTrip);
+router.delete("/:tripId/archive", protect, softDeleteTrip);
+router.patch("/:tripId/visibility", protect, visibilityChange);
+router.patch("/:tripId/complete", protect, completeTrip);
 
 
-
-
-
-
-
-
-
-
-// *** 2 *** Collaboration & Invitations
-
-
-// invite a user to a trip
-router.post("/:tripId/invite", protect, inviteToTrip)
-
-// accept an invite to a trip
-router.post("/:tripId/accept", protect, acceptToTrip)
-
-
-
-// 1.get the list of accepted friends for a trip where the user is owner
-router.get("/:tripId/collaborators",protect, getCollaboratorsOfTrip)
-
-
-// 2.remove a collaborator from trip by the owner
-router.delete("/:tripId/collaborators/:userId",protect, removeCollaborator)
-
-
-// 3. get all the invited friends of a trip by the owner
-router.get("/:tripId/invited", protect, getinvitedsOfTrip)
-
-
-
-// 4. to delete a invited Friend to a trip by the owner
-router.delete("/:tripId/invited/:userId", protect, removeInvite)
-
-
-
-
-
-// *** trip discovery and filtering
-
-
-// to see the trip list of a user where he is owner (useful for self or others)
-router.get("/:userId/own-trip", protect, tripsOfUser)
-
-// trips where user is the collaborator (useful for self or others)
-router.get("/:userId/collaborated-trip", protect, tripsCollaborated)
-
-
-//all viewable trips fo me
-router.get("/visible", protect, viewableTrip)
-
-// public explore feed for logged out users also
-router.get("/public", getPublicTrips)
-
-// get trips by tag
-router.get("/tag/:tagname", protect, getTripsByTagname)
-
-//feed api(not built fully + search)
-router.get("/discover/feed",protect, discoverFeed)
-
-
-
-
-
-
-//  Trip Timeline & Status
-
-// to get all the upcoming trips
-
-router.get("/status/upcoming",protect, upcomingTrips)
-
-//to get all the ongoing trips
-router.get("/status/ongoing", protect, onGoingTrips)
-
-//to get the past trips
-router.get("/status/past", protect, pastTrips)
-
-
-
-// for adding posts in a trip
-router.post("/:tripId/posts",protect, addPostToTrip)
-
-//for getting all the post and related information of a trip( as i i have done for getting info for a trip id earlier +might build it later)
-
-//🕒 router.get("/:tripId/posts",protect, getPostsOfTrip)
-
-
-
-
-// for deleting a post from a trip
-
-router.delete("/:tripId/posts/:postId", protect, deletePostOfTrip)
-
-
-
-// for toggling  highlighting a post
-router.patch("/:tripId/posts/:postId/highlight",protect, highlightPost)
-
-
-
-// for toggle like a trip
-router.post("/:tripId/like",protect, toggleLike)
-
-
-// get users who liked the trip
-router.get("/:tripId/likes",protect, getLikesOfTrip)
-
-
-
-
-
-//7. Expense Management
-
-// adding expenses to a trip
-router.post("/:tripId/expenses",protect , addExpensesTrip)
-
-// getting the list of expenses of a trip
-router.get("/:tripId/expenses", protect , getExpensesTrip) 
-
-router.delete(":tripId/expenses/:expenseId", protect, deleteExpense)
-
-
-
-// 8.Notes System
-
-
-// to add a note to a trip
-router.post("/:tripId/notes", protect, addNote)
-
-
-//to get all the post from a trip
-router.get("/:tripId/notes", protect, getNotes)
-
-
-// delete a note
-router.delete("/:tripId/notes/:noteId/pin" , protect , deleteNote)
-
-
-
-
-// pin unpin a note
-router.patch("/:tripId/notes/:noteId/pin" , protect ,pinUnpinNote)
-
-
-
-
-
-
-
-
-
-
-
-// 9. Todo List / Planning
-
-// adding todo in a trip
-router.post("/:tripId/todos" ,  protect, addTodo)
-
-// list todo of trip
-router.get("/:tripId/todos" , protect , getTodo)
-
-
-// toggle task done
-router.patch("/:tripId/todos/:todoId/toggle", protect , toggleTodo)
-
-
-// deleting a todo from a trip
-router.delete("/:tripId/todos/:todoId", protect , deleteTodo)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// ✅ LAST: Dynamic route for fetching trip by ID
+router.get("/:tripId", protect, getTripById);
 
 
 export default router;

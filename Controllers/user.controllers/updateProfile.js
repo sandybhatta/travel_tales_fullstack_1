@@ -1,3 +1,4 @@
+import { uploadToCloudinary } from "../../utils/cloudinary";
 
 
 
@@ -62,9 +63,13 @@ const updateProfile= async(req,res)=>{
        if(bio !== undefined){
         user.bio=bio
        }
-       if(avatar !== undefined){
-        user.avatar=avatar
-       }
+       if (req.file && req.file.mimetype.startsWith("image/")) {
+        const result = await uploadToCloudinary(req.file, "/post/avatar", "image");
+        user.avatar = {
+          public_id: result.public_id,
+          url: result.secure_url,
+        };
+      }
 
        // if any of the location key exists then only change the location object if none of them are passed then no need to change it to the same location as it was
 

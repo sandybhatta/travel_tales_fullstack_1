@@ -96,9 +96,6 @@ commentSchema.methods.toggleLike = async function (userId) {
 
 //   Instance Method: For internal logic
 
-// commentSchema.methods.isReply = function () {
-//   return !!this.parentComment;
-// };
 
 
 // comment soft delete , marking the isdelete true and content to [deleted]

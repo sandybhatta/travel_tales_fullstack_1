@@ -37,9 +37,9 @@ const postSchema = new mongoose.Schema(
     // 🖼️ Media (Images / Videos via Cloudinary)
     media: [
       {
-        public_id: String, // for Cloudinary deletion
+        public_id: String, 
         url: String,
-        type: {
+        resource_type: {
           type: String,
           enum: ["image", "video"],
           default: "image",
