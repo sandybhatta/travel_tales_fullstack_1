@@ -320,7 +320,8 @@ tripSchema.methods.canView = async function (user) {
     if (!user) return false;
   
     // If user is the trip owner
-    if (this.user.toString() === user._id.toString()) return true;
+    if (this.user.toString() === user._id.toString() || this.acceptedFriends?.some(friendObj => friendObj.user.toString() === user._id.toString())
+    ) return true;
   
     // Populate the owner's followers and closeFriends only if needed
     const TripOwner = await mongoose.model("User").findById(this.user)

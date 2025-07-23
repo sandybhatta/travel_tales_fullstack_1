@@ -19,7 +19,7 @@ router.get("/:postId",protect, getPostDetails)
 
 
 // to edit a post
-router.patch("/:postId" , protect , editPost)
+// router.patch("/:postId" , protect , editPost)
 
 
 
