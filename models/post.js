@@ -96,6 +96,14 @@ const postSchema = new mongoose.Schema(
       type: Date,
     },
 
+    mentions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    
+    
     // 🏅 XP Boost or Featured tag
     isFeatured: {
       type: Boolean,
