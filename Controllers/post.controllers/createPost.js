@@ -62,13 +62,14 @@ const createPost = async (req, res) => {
     }
 
 
-    
+    let postVisibility;
 
     if(tripId){
       const trip = await Trip.findById(tripId);
       if(!trip || !trip.canPost(user)){
         return res.status(403).json({ message: "You cannot post to this trip." });
       } 
+      postVisibility=trip.visibility
     }
 
 
@@ -80,7 +81,7 @@ const allowedVisibility = ["public", "followers", "close_friends","private"]
       caption:caption?caption.trim():undefined,
       hashtags,
       media,
-      visibility:allowedVisibility.includes(visibility)? visibility:undefined,
+      visibility:postVisibility?postVisibility : allowedVisibility.includes(visibility)? visibility:undefined,
       trip: tripId || null,
       taggedUsers: validTaggedUsers,
       location:location?location:undefined,
