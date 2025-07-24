@@ -5,6 +5,7 @@ import createPost from "../Controllers/post.controllers/createPost";
 import getPostDetails from "../Controllers/post.controllers/getPostDetails";
 import editPost from "../Controllers/post.controllers/editPost";
 import sharePost from "../Controllers/post.controllers/sharepost";
+import toggleLikePost from "../Controllers/post.controllers/togglelikePost";
 const router = express.Router();
 
 
@@ -22,6 +23,14 @@ router.post("/:postId/share", protect , sharePost)
 
 // to edit a post
 router.patch("/:postId" , protect , editPost)
+
+
+// toggle like a post
+
+router.patch("/:postId/like", protect , toggleLikePost)
+
+
+
 
 
 
