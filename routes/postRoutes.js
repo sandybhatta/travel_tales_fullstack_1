@@ -7,6 +7,7 @@ import editPost from "../Controllers/post.controllers/editPost";
 import sharePost from "../Controllers/post.controllers/sharepost";
 import toggleLikePost from "../Controllers/post.controllers/togglelikePost";
 import getLikesOfPost from "../Controllers/post.controllers/getLikesOfPost";
+import postsLikedByUser from "../Controllers/post.controllers/postsLikedByUser";
 const router = express.Router();
 
 
@@ -35,7 +36,8 @@ router.patch("/:postId/like", protect , toggleLikePost)
 router.get("/:postId/likes", protect, getLikesOfPost)
 
 
-
+// get all post liked by the current user
+router.get("/liked-posts" , protect , postsLikedByUser)
 
 
 
