@@ -6,6 +6,7 @@ import getPostDetails from "../Controllers/post.controllers/getPostDetails";
 import editPost from "../Controllers/post.controllers/editPost";
 import sharePost from "../Controllers/post.controllers/sharepost";
 import toggleLikePost from "../Controllers/post.controllers/togglelikePost";
+import getLikesOfPost from "../Controllers/post.controllers/getLikesOfPost";
 const router = express.Router();
 
 
@@ -26,9 +27,12 @@ router.patch("/:postId" , protect , editPost)
 
 
 // toggle like a post
-
 router.patch("/:postId/like", protect , toggleLikePost)
 
+
+
+// get all the users who liked the post
+router.get("/:postId/likes", protect, getLikesOfPost)
 
 
 
