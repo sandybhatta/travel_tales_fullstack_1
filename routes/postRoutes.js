@@ -19,8 +19,9 @@ router.post("/",upload.array("post",20), protect, createPost)
 router.get("/:postId",protect, getPostDetails)
 
 router.post("/:postId/share", protect , sharePost)
+
 // to edit a post
-// router.patch("/:postId" , protect , editPost)
+router.patch("/:postId" , protect , editPost)
 
 
 
