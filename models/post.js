@@ -3,14 +3,14 @@ import cloudinary from "../utils/cloudinary.js";
 
 const postSchema = new mongoose.Schema(
   {
-    // 👤 Post Author
+    //  Post Author
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
 
-    // 📝 Caption
+    //  Caption
     caption: {
       type: String,
       maxlength: 1000,
@@ -18,7 +18,7 @@ const postSchema = new mongoose.Schema(
     taggedUsers: [
       { type: mongoose.Schema.Types.ObjectId, ref: "User" }
     ],
-    // 🏷️ Hashtags
+    //  Hashtags
     hashtags: [
       {
         type: String,
@@ -27,14 +27,14 @@ const postSchema = new mongoose.Schema(
       },
     ],
 
-    // 📍 Location Info
+    //  Location Info
     location: {
       city: String,
       state: String,
       country: String,
     },
 
-    // 🖼️ Media (Images / Videos via Cloudinary)
+    //  Media (Images / Videos via Cloudinary)
     media: [
       {
         public_id: String, 
@@ -47,7 +47,7 @@ const postSchema = new mongoose.Schema(
       },
     ],
 
-    // ❤️ Likes
+    //  Likes
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -55,7 +55,7 @@ const postSchema = new mongoose.Schema(
       },
     ],
 
-    // 💬 Comments (via ref)
+    //  Comments (via ref)
     comments: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -63,21 +63,21 @@ const postSchema = new mongoose.Schema(
       },
     ],
 
-    // 🔁 Shared Post Ref
+    //  Shared Post Ref
     sharedFrom: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Post",
       default: null,
     },
 
-    // 🔒 Privacy Options
+    //  Privacy Options
     visibility: {
       type: String,
       enum: ["public", "followers", "close_friends","private"],
       default: "public",
     },
 
-    // 🔖 Bookmarked By
+    //  Bookmarked By
     bookmarkedBy: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -85,13 +85,13 @@ const postSchema = new mongoose.Schema(
       },
     ],
 
-    // 🏞️ Trip Info (Optional)
+    //  Trip Info (Optional)
     tripId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Trip", // when posted as part of itinerary
     },
 
-    // 🗓️ Travel Date (optional, not post date)
+    //  Travel Date (optional, not post date)
     travelDate: {
       type: Date,
     },
@@ -104,7 +104,7 @@ const postSchema = new mongoose.Schema(
     ],
     
     
-    // 🏅 XP Boost or Featured tag
+    //  XP Boost or Featured tag
     isFeatured: {
       type: Boolean,
       default: false,

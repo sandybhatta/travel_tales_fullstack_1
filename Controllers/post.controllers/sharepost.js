@@ -1,7 +1,7 @@
 import Post from "../../models/post.js";
 import User from "../../models/User.js";
 
-// Recursive function to find original shared post
+// 🔁 Recursive function to trace the original post
 const findOriginalPost = async (postId) => {
   const post = await Post.findById(postId).select("sharedFrom");
   if (!post) return null;
@@ -14,27 +14,28 @@ const sharePost = async (req, res) => {
     const { caption, taggedUsers = [], location, visibility } = req.body;
     const { user } = req;
 
-    //  Get the original post (recursively)
+    //  Get the very original post (not just the shared one)
     const originalPost = await findOriginalPost(postId);
-
     if (!originalPost) {
-      return res.status(404).json({ message: "Post not found" });
+      return res.status(404).json({ message: "Original post not found" });
     }
 
-    //  Check if the original post is public or part of a public trip
+    //  Load original post with trip info
     const original = await Post.findById(originalPost._id)
-      .select("trip visibility")
-      .populate("trip", "visibility");
+      .select("tripId visibility")
+      .populate("tripId", "visibility");
 
     const isPublic =
-      original.visibility === "public" ||
-      (original.trip && original.trip.visibility === "public");
+      original?.visibility === "public" ||
+      (original?.tripId && original.tripId.visibility === "public");
 
     if (!isPublic) {
-      return res.status(403).json({ message: "Only public posts can be shared" });
+      return res.status(403).json({
+        message: "Only public posts or posts from public trips can be shared",
+      });
     }
 
-    // Validate tagged users (must be in following list)
+    //  Filter valid tagged users (must be in following)
     const followingIds = user.following.map((id) => id.toString());
     const validTaggedUsers = Array.isArray(taggedUsers)
       ? taggedUsers.filter((id) => {
@@ -43,19 +44,19 @@ const sharePost = async (req, res) => {
         })
       : [];
 
-    //  Extract hashtags and mentions
+    //  Hashtags and Mentions
     let hashtags = [];
     let mentionedUsersId = [];
 
     if (caption) {
-      hashtags = caption
-        .split(" ")
+      const words = caption.split(" ");
+
+      hashtags = words
         .filter((word) => word.startsWith("#"))
         .map((tag) => tag.slice(1).trim().toLowerCase())
         .filter((tag) => tag.length > 0);
 
-      const mentionedUsernames = caption
-        .split(" ")
+      const mentionedUsernames = words
         .filter((word) => word.startsWith("@"))
         .map((s) => s.slice(1).trim().toLowerCase());
 
@@ -78,7 +79,7 @@ const sharePost = async (req, res) => {
       location: location || undefined,
       visibility: ["public", "followers", "close_friends", "private"].includes(visibility)
         ? visibility
-        : "public", // default visibility
+        : "public", // default fallback
     });
 
     return res.status(201).json({
@@ -86,7 +87,7 @@ const sharePost = async (req, res) => {
       post: newPost,
     });
   } catch (error) {
-    console.error("Error sharing post:", error);
+    console.error(" Error sharing post:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };

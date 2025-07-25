@@ -18,7 +18,7 @@ const getPostDetails = async (req, res) => {
           select: "name username avatar",
         },
         {
-          path: "trip",
+          path: "tripId",
           select: "title visibility startDate endDate collaborators user",
         },
         {
@@ -33,7 +33,7 @@ const getPostDetails = async (req, res) => {
               select: "name username avatar",
             },
             {
-              path: "trip",
+              path: "tripId",
               select: "title visibility startDate endDate",
             },
           ],
@@ -47,8 +47,8 @@ const getPostDetails = async (req, res) => {
     const isOwner = post.author._id.toString() === user._id.toString();
 
     // Step 1: Trip-based visibility
-    if (post.trip) {
-      const canView = await post.trip.canView(user);
+    if (post.tripId) {
+      const canView = await post.tripId.canView(user);
       if (!canView) {
         return res.status(403).json({ message: "You are not allowed to view this post." });
       }
@@ -83,7 +83,7 @@ const getPostDetails = async (req, res) => {
 if (post.sharedFrom && !isOwner) {
   const original = post.sharedFrom;
   
-  const isTripShared = !original.trip || original.trip.visibility === "public";
+  const isTripShared = !original.tripId || original.tripId.visibility === "public";
   const isPostShared = (original.visibility || "public") === "public";
 
   if (!isTripShared || !isPostShared) {
@@ -103,10 +103,10 @@ if (post.sharedFrom && !isOwner) {
     // Step 4: Shareability
     const sharedFrom = post.sharedFrom;
     const canShare = (post.visibility || "public") === "public" &&
-      (!post.trip || post.trip.visibility === "public") &&
+      (!post.tripId || post.tripId.visibility === "public") &&
       (!sharedFrom || (
         (sharedFrom.visibility || "public") === "public" &&
-        (!sharedFrom.trip || sharedFrom.trip.visibility === "public")
+        (!sharedFrom.tripId || sharedFrom.tripId.visibility === "public")
       ));
 
     res.status(200).json({

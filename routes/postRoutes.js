@@ -10,6 +10,7 @@ import getLikesOfPost from "../Controllers/post.controllers/getLikesOfPost";
 import postsLikedByUser from "../Controllers/post.controllers/postsLikedByUser";
 import mentionedPost from "../Controllers/post.controllers/mentionedPost";
 import myPost from "../Controllers/post.controllers/myPost";
+import postOfOthers from "../Controllers/post.controllers/postOfOthers";
 const router = express.Router();
 
 
@@ -50,7 +51,8 @@ router.get("/mentioned-posts", protect , mentionedPost)
 router.get("/me", protect , myPost)
 
 
-
+//all posts of a specific user
+router.get("/user/:userId" , protect , postOfOthers)
 
 
 
