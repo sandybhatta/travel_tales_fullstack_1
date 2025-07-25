@@ -8,6 +8,8 @@ import sharePost from "../Controllers/post.controllers/sharepost";
 import toggleLikePost from "../Controllers/post.controllers/togglelikePost";
 import getLikesOfPost from "../Controllers/post.controllers/getLikesOfPost";
 import postsLikedByUser from "../Controllers/post.controllers/postsLikedByUser";
+import mentionedPost from "../Controllers/post.controllers/mentionedPost";
+import myPost from "../Controllers/post.controllers/myPost";
 const router = express.Router();
 
 
@@ -42,7 +44,12 @@ router.get("/liked-posts" , protect , postsLikedByUser)
 
 
 // posts that the user has been mentioned
-router.get("/mentioned-posts", protect , )
+router.get("/mentioned-posts", protect , mentionedPost)
+
+// posts that current user have made
+router.get("/me", protect , myPost)
+
+
 
 
 

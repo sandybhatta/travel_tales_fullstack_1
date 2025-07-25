@@ -1,11 +1,11 @@
 import Post from "../../models/post.js";
 
-const mentionedPost = async(req,res)=>{
+const myPost = async (req,res)=>{
 
     try {
         const { user } = req;
         const post = await Post.find({
-            mentions:user._id
+            author:user._id
         }).populate([
             {
                 path:"author",
@@ -24,14 +24,15 @@ const mentionedPost = async(req,res)=>{
                 options:{limit:2},
                 populate:{path:"author" , select:"name username avatar"}
             }
-        ]).sort({createdAt:-1})
+        ])
+            .sort({createdAt:-1})
 
         if(post.length === 0){
-            return res.status(200).json({message:"No posts have been found where you were mentioned"})
+            return res.status(200).json({message:"No posts made so far"})
         }
         return res.status(200).json({post})
     } catch (error) {
         return res.status(500).json({message:"Internal Server Error"})
     }
 }
-export default mentionedPost
+export default myPost
