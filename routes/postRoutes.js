@@ -21,6 +21,7 @@ router.post("/",upload.array("post",20), protect, createPost)
 // get post details
 router.get("/:postId",protect, getPostDetails)
 
+//share a post
 router.post("/:postId/share", protect , sharePost)
 
 // to edit a post
@@ -38,6 +39,16 @@ router.get("/:postId/likes", protect, getLikesOfPost)
 
 // get all post liked by the current user
 router.get("/liked-posts" , protect , postsLikedByUser)
+
+
+// posts that the user has been mentioned
+router.get("/mentioned-posts", protect , )
+
+
+
+
+
+
 
 
 
