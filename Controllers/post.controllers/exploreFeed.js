@@ -5,7 +5,7 @@ import User from "../../models/User.js";
 const exploreFeed = async (req, res) => {
   try {
     const { user } = req;
-    const page = parseInt(req.query.skip) || 0;
+    const page = parseInt(req.query.page) || 0;
     const limit = parseInt(req.query.limit) || 20;
     const skip = (page-1)*limit;
 
@@ -24,8 +24,9 @@ const exploreFeed = async (req, res) => {
     //  Post Criteria
     const postFilter = {
       author: { $ne: user._id },
+       visibility: "public" ,
       $or: [
-        { visibility: "public" },
+        
         { author: { $in: interestUserIds } },
         { hashtags: { $in: interests } },
         { mentions: { $in: followingIds } },
@@ -39,7 +40,7 @@ const exploreFeed = async (req, res) => {
     const posts = await Post.find(postFilter)
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(limit)
+      .limit(Math.floor(limit/2))
       .populate([
         { path: "author", select: "name username avatar" },
         { path: "taggedUsers", select: "name username avatar" },
@@ -79,25 +80,25 @@ const exploreFeed = async (req, res) => {
     const trips = await Trip.find(tripFilter)
       .sort({ createdAt: -1 }) // or sort by trending/popular
       .skip(skip)
-      .limit(limit)
+      .limit(Math.floor(limit/2))
       .populate([
         { path: "user", select: "name username avatar" },
         { path: "acceptedFriends.user", select: "name username avatar" },
         
       ]);
 
-    // 📌 Mix posts and trips together for final feed
+    //  Mix posts and trips together for final feed
     const feedItems = [...posts, ...trips];
 
     // Optional: shuffle/mix/diversify
     feedItems.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-    // Only return up to limit items
-    const limitedFeed = feedItems.slice(0, limit);
+   
+    
 
     return res.status(200).json({
       feed: limitedFeed,
-      hasMore: feedItems.length > limit
+      hasMore: feedItems.length > (skip + limit)
     });
 
   } catch (error) {

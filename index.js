@@ -10,6 +10,7 @@ import authRoutes from "./routes/authroutes.js"
 import userRoutes from "./routes/userRoutes.js"
 import tripRoutes from "./routes/tripRoutes.js"
 import postRoutes from "./routes/postRoutes.js"
+import commentRoutes  from "./routes/commentRoutes.js"
 import { scheduleTripCompletion } from "./cronJob/scheduleTripCompletion.js";
 
 
@@ -50,6 +51,7 @@ app.use("/api/trips", tripRoutes )
 
 app.use("/api/posts", postRoutes )
 
+app.use("/api/comment",commentRoutes)
 
 
 

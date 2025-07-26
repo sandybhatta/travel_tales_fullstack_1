@@ -50,7 +50,7 @@ const createPost = async (req, res) => {
         const mentionedUserNames= caption
         .split(" ")
         .filter(s=>s.startsWith('@'))
-        .map(s=>s.slice(1).trim().toLowerCase())
+        .map(s=>s.slice(1).trim())
 
 
         if(mentionedUserNames.length>0){

@@ -58,7 +58,7 @@ const sharePost = async (req, res) => {
 
       const mentionedUsernames = words
         .filter((word) => word.startsWith("@"))
-        .map((s) => s.slice(1).trim().toLowerCase());
+        .map((s) => s.slice(1).trim());
 
       if (mentionedUsernames.length > 0) {
         const mentionedUsers = await User.find({

@@ -51,7 +51,7 @@ const editPost = async (req, res) => {
       const mentionNames = caption
         .split(" ")
         .filter(word => word.startsWith("@"))
-        .map(word => word.slice(1).trim().toLowerCase());
+        .map(word => word.slice(1).trim());
 
       if (mentionNames.length > 0) {
         const mentionedUsers = await User.find({

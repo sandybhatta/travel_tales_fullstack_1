@@ -12,6 +12,7 @@ import mentionedPost from "../Controllers/post.controllers/mentionedPost";
 import myPost from "../Controllers/post.controllers/myPost";
 import postOfOthers from "../Controllers/post.controllers/postOfOthers";
 import feedOfFollowing from "../Controllers/post.controllers/feedOfFollowing";
+import exploreFeed from "../Controllers/post.controllers/exploreFeed";
 const router = express.Router();
 
 
@@ -65,6 +66,6 @@ router.get("/feed/following", protect , feedOfFollowing)
 
 
 // feed for exploring
-router.get("/feed/explore" , protect , )
+router.get("/feed/explore" , protect , exploreFeed)
 
 export default router;
