@@ -51,7 +51,7 @@ import deleteTodo from "../Controllers/trip.controllers/deleteTodo.js";
 const router = express.Router();
 
 
-// ✅ STATIC / SPECIFIC ROUTES FIRST
+//  STATIC / SPECIFIC ROUTES FIRST
 
 router.get("/status/upcoming", protect, upcomingTrips);
 router.get("/status/ongoing", protect, onGoingTrips);
@@ -70,11 +70,11 @@ router.get("/:userId/own-trip", protect, tripsOfUser);
 router.get("/:userId/collaborated-trip", protect, tripsCollaborated);
 
 
-// ✅ CREATE TRIP
+//  CREATE TRIP
 router.post("/", protect, upload.single("coverPhoto"), createTrip);
 
 
-// ✅ COLLABORATION & INVITATIONS
+//  COLLABORATION & INVITATIONS
 router.post("/:tripId/invite", protect, inviteToTrip);
 router.post("/:tripId/accept", protect, acceptToTrip);
 router.get("/:tripId/collaborators", protect, getCollaboratorsOfTrip);
@@ -83,38 +83,38 @@ router.get("/:tripId/invited", protect, getinvitedsOfTrip);
 router.delete("/:tripId/invited/:userId", protect, removeInvite);
 
 
-// ✅ POSTS
+//  POSTS
 router.post("/:tripId/posts", protect, addPostToTrip);
 router.delete("/:tripId/posts/:postId", protect, deletePostOfTrip);
 router.patch("/:tripId/posts/:postId/highlight", protect, highlightPost);
 
 
-// ✅ LIKES
+//  LIKES
 router.post("/:tripId/like", protect, toggleLike);
 router.get("/:tripId/likes", protect, getLikesOfTrip);
 
 
-// ✅ EXPENSES
+//  EXPENSES
 router.post("/:tripId/expenses", protect, addExpensesTrip);
 router.get("/:tripId/expenses", protect, getExpensesTrip);
 router.delete("/:tripId/expenses/:expenseId", protect, deleteExpense);
 
 
-// ✅ NOTES
+//  NOTES
 router.post("/:tripId/notes", protect, addNote);
 router.get("/:tripId/notes", protect, getNotes);
 router.delete("/:tripId/notes/:noteId", protect, deleteNote);
 router.patch("/:tripId/notes/:noteId/pin", protect, pinUnpinNote);
 
 
-// ✅ TODOs
+//  TODOs
 router.post("/:tripId/todos", protect, addTodo);
 router.get("/:tripId/todos", protect, getTodo);
 router.patch("/:tripId/todos/:todoId/toggle", protect, toggleTodo);
 router.delete("/:tripId/todos/:todoId", protect, deleteTodo);
 
 
-// ✅ TRIP LIFE-CYCLE
+//  TRIP LIFE-CYCLE
 router.patch("/:tripId", protect, upload.single("coverPhoto"), editTrip);
 router.patch("/:tripId/restore", protect, restoreTrip);
 router.delete("/:tripId/archive", protect, softDeleteTrip);
@@ -122,7 +122,7 @@ router.patch("/:tripId/visibility", protect, visibilityChange);
 router.patch("/:tripId/complete", protect, completeTrip);
 
 
-// ✅ LAST: Dynamic route for fetching trip by ID
+//  LAST: Dynamic route for fetching trip by ID
 router.get("/:tripId", protect, getTripById);
 
 

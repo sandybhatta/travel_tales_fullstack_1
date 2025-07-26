@@ -11,10 +11,10 @@ export const scheduleTripCompletion = () => {
       );
 
       console.log(
-        `[CRON] ✅ Trip auto-completion ran. Modified ${result.modifiedCount} trips.`
+        `[CRON]  Trip auto-completion ran. Modified ${result.modifiedCount} trips.`
       );
     } catch (error) {
-      console.error("[CRON] ❌ Error updating trips:", error.message);
+      console.error("[CRON]  Error updating trips:", error.message);
     }
   });
 };

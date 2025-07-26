@@ -45,7 +45,7 @@ const changeUsername = async (req, res) => {
     });
 
   } catch (err) {
-    console.error("❌ Error changing username:", err.message);
+    console.error(" Error changing username:", err.message);
     return res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -46,7 +46,7 @@ const changeEmail = async (req, res) => {
       message: "Verification link sent to your new email. Please confirm within 30 minutes.",
     });
   } catch (error) {
-    console.error("❌ Error in changeEmail:", error.message);
+    console.error(" Error in changeEmail:", error.message);
     return res.status(500).json({ message: "Internal server error" });
   }
 };

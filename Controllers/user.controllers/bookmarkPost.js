@@ -28,7 +28,7 @@ const bookmarkPost = async (req, res) => {
         .status(200)
         .json({ message: "Post removed from your bookmarks", bookmarked: false });
     } else {
-      // ✅ Bookmark
+      //  Bookmark
       await Promise.all([
         User.findByIdAndUpdate(userId, { $addToSet: { bookmarks: postId } }),
         

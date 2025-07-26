@@ -18,12 +18,12 @@ const viewableTrip = async (req, res) => {
 
     const closeFriendsOfUser = closeFriendsDocs.map(doc => doc._id);
 
-    // 🧠 3. Find users who have me in their followers list
+    //  3. Find users who have me in their followers list
     const followerDocs = await User.find({ followers: user._id }).select("_id");
 
     const followedUsers = followerDocs.map(doc => doc._id);
 
-    // 🔍 4. Build base visibility query
+    //  4. Build base visibility query
     const baseQuery = {
       $or: [
         { user: user._id },
@@ -41,12 +41,12 @@ const viewableTrip = async (req, res) => {
       ]
     };
 
-    // 🏷️ 5. Tag filter
+    //  5. Tag filter
     if (tag) {
       baseQuery.tags = tag;
     }
 
-    // 🔎 6. Search filter (title or destination)
+    //  6. Search filter (title or destination)
     if (search) {
       baseQuery.$and = baseQuery.$and || [];
       baseQuery.$and.push({
@@ -57,7 +57,7 @@ const viewableTrip = async (req, res) => {
       });
     }
 
-    // 🔁 7. Sorting options
+    //  7. Sorting options
     let sortOption = { createdAt: -1 }; // default: newest
     if (sortBy === "oldest") {
       sortOption = { createdAt: 1 };
@@ -65,7 +65,7 @@ const viewableTrip = async (req, res) => {
       sortOption = { "likes.length": -1 };
     }
 
-    // 📦 8. Fetch trips
+    //  8. Fetch trips
     const trips = await Trip.find(baseQuery)
       .sort(sortOption)
       .skip(skip)
@@ -73,10 +73,10 @@ const viewableTrip = async (req, res) => {
       .populate("user", "name username avatar")
       .select("-__v");
 
-    // 📊 9. Count total for pagination
+    //  9. Count total for pagination
     const totalCount = await Trip.countDocuments(baseQuery);
 
-    // ✅ 10. Return response
+    //  10. Return response
     res.status(200).json({
       trips,
       page,

@@ -57,7 +57,7 @@ const userSchema = new mongoose.Schema(
     },
     
 
-    // 🧑‍🤝‍🧑 Followers / Following
+    //  Followers / Following
     followers: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -85,21 +85,21 @@ const userSchema = new mongoose.Schema(
         }
       ],
 
-    // 👑 Roles (Admin, User, etc.)
+    //  Roles (Admin, User, etc.)
     role: {
       type: String,
       enum: ["user", "admin"],
       default: "user",
     },
 
-    // 🏅 Badges for Gamification
+    //  Badges for Gamification
     badges: [
       {
         type: String, // e.g. "city_hopper", "mountain_master"
       },
     ],
 
-    // 🎮 XP & Level System
+    //  XP & Level System
     xp: {
       type: Number,
       default: 0,
@@ -112,12 +112,12 @@ const userSchema = new mongoose.Schema(
   
    
 
-    // 🕓 Last Login
+    //  Last Login
   lastLogin: {
       type: Date,
     },  
 
-    // ⚙️ Account settings
+    //  Account settings
     isVerified: {
       type: Boolean,
       default: false,

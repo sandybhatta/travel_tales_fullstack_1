@@ -63,4 +63,8 @@ router.get("/feed/following", protect , feedOfFollowing)
 
 
 
+
+// feed for exploring
+router.get("/feed/explore" , protect , )
+
 export default router;

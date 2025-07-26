@@ -188,20 +188,20 @@ export const refresh = async (req, res) => {
       return res.status(403).json({ message: 'Token reuse detected. Re-login required.' });
     }
 
-    // 🧠 Fetch user
+    //  Fetch user
     const user = await User.findById(payload.userId);
     if (!user) {
       await existingToken.deleteOne();
       return res.status(401).json({ message: "User not found." });
     }
 
-    // ❌ If user is deactivated, deny token refresh
+    //  If user is deactivated, deny token refresh
     if (user.isDeactivated) {
       await existingToken.deleteOne(); // Cleanup old token
       return res.status(403).json({ message: "Account is deactivated. Reactivate to continue." });
     }
 
-    // ✅ Valid refresh - rotate token
+    //  Valid refresh - rotate token
     await existingToken.deleteOne();
 
     const newAccessToken = getAccessToken(user._id);

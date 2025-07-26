@@ -11,12 +11,12 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// ✅ Optional: Confirm config (only in dev mode)
+//  Optional: Confirm config (only in dev mode)
 if (process.env.NODE_ENV === 'development') {
   console.log('📦 Cloudinary Configured:');
 }
 
-// ✅ Reusable upload from buffer using stream
+//  Reusable upload from buffer using stream
 export const uploadToCloudinary = (fileBuffer, folder, resource_type = "image") => {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(

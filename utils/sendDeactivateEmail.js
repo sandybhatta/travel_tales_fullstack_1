@@ -44,9 +44,9 @@ export const sendDeactivateEmail = async ( email, username ) => {
 
     // Send email
     await transporter.sendMail(mailOptions);
-    console.log(`✅ Email sent to ${email}`);
+    console.log(` Email sent to ${email}`);
   } catch (err) {
-    console.error("❌ Email sending error:", err.message);
+    console.error(" Email sending error:", err.message);
     throw new Error("Failed to send email");
   }
 };

@@ -33,7 +33,7 @@ const verifyEmailChange = async (req, res) => {
 
     return res.status(200).json({ message: "Email changed successfully" });
   } catch (error) {
-    console.error("❌ Error verifying email change:", error.message);
+    console.error(" Error verifying email change:", error.message);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
