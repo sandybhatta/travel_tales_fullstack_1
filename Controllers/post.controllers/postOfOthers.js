@@ -39,8 +39,8 @@ const postOfOthers = async (req, res) => {
         },
       ]);
 
-    const followingIds = user.following.map((u) => u._id.toString());
-    const closeFriendIds = anotherUser.closeFriends.map((u) => u._id.toString());
+    const followingIds = user.following.map((u) => u.toString());
+    const closeFriendIds = anotherUser.closeFriends.map((u) => u.toString());
 
     const filteredPosts = [];
 

@@ -11,6 +11,7 @@ import postsLikedByUser from "../Controllers/post.controllers/postsLikedByUser";
 import mentionedPost from "../Controllers/post.controllers/mentionedPost";
 import myPost from "../Controllers/post.controllers/myPost";
 import postOfOthers from "../Controllers/post.controllers/postOfOthers";
+import feedOfFollowing from "../Controllers/post.controllers/feedOfFollowing";
 const router = express.Router();
 
 
@@ -57,7 +58,8 @@ router.get("/user/:userId" , protect , postOfOthers)
 
 
 
-
+// feed of posts of following
+router.get("/feed/following", protect , feedOfFollowing)
 
 
 
