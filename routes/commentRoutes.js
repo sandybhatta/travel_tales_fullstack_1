@@ -10,6 +10,8 @@ const router = express.Router();
 router.post("/:postId", protect , createRootComment)
 
 
+// reply to a comment or reply to a reply
+router.post("/:postId/:parentCommentId/reply", protect , )
 
 
 
