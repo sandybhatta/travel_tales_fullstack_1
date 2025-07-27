@@ -19,7 +19,20 @@ const getRootComment = async (req, res) => {
       isDeleted:false,
     })
       .sort({ createdAt: -1 }) 
-      .populate("author", "name username avatar") 
+      .populate([
+        {
+          path:"author",
+          select:"name username avatar"
+        },
+        {
+          path:"mentions",
+          select:"name username avatar"
+        },
+        {
+          path:"likes",
+          select:"_id"
+        }
+      ]) 
       .lean(); 
 
     if (rootComments.length === 0) {
