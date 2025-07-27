@@ -6,35 +6,41 @@ const replyOfComment = async (req, res) => {
   try {
     const { user } = req;
     const { content } = req.body;
-    const { postId, parentCommentId } = req.params;
+    const { postId, rootCommentId, parentCommentId } = req.params;
 
-    // 1. Basic validation
+    
     const trimmedContent = content?.trim();
     if (!trimmedContent || trimmedContent.length === 0) {
-      return res.status(400).json({ message: "Comment must contain some content" });
+      return res.status(400).json({ message: "Reply must contain content." });
     }
     if (trimmedContent.length > 1000) {
-      return res.status(400).json({ message: "Comment must be within 1000 characters" });
+      return res.status(400).json({ message: "Maximum 1000 characters allowed." });
     }
 
-    // 2. Validate post
+    
     const post = await Post.findById(postId).select("_id");
     if (!post) {
-      return res.status(404).json({ message: "Post not found" });
+      return res.status(404).json({ message: "Post not found." });
     }
 
-    // 3. Validate parent comment
+    
     const parentComment = await Comment.findById(parentCommentId);
     if (!parentComment || parentComment.isDeleted) {
-      return res.status(400).json({ message: "Cannot reply to this comment" });
+      return res.status(400).json({ message: "Cannot reply to this comment." });
     }
 
-    // 4. Ensure parent comment belongs to the post
+    // Ensure parent comment belongs to the post
     if (parentComment.post.toString() !== post._id.toString()) {
-      return res.status(400).json({ message: "Parent comment does not belong to the specified post" });
+      return res.status(400).json({ message: "Parent comment doesn't belong to this post." });
     }
 
-    // 5. Handle mentions (e.g., @username)
+    // Validate root comment
+    const rootComment = await Comment.findById(rootCommentId).select("_id");
+    if (!rootComment || rootComment.post.toString() !== post._id.toString()) {
+      return res.status(400).json({ message: "Invalid root comment for this post." });
+    }
+
+    // Extract @mentions
     const words = trimmedContent.split(" ");
     const potentialMentions = words
       .filter((word) => word.startsWith("@"))
@@ -48,25 +54,25 @@ const replyOfComment = async (req, res) => {
       mentions = mentionedUsers.map((u) => u._id);
     }
 
-    // 6. Create the reply
+    // Create reply
     const newReply = await Comment.create({
       post: post._id,
       author: user._id,
       content: trimmedContent,
       parentComment: parentComment._id,
+      rootComment: rootComment._id,
       mentions,
     });
 
-    // 7. Return success response (optional: return newReply)
     return res.status(201).json({
-      message: "Reply created successfully",
+      message: "Reply created successfully.",
       reply: newReply,
     });
 
   } catch (error) {
-    console.error("Error in replyOfComment:", error);
+    console.error("Reply creation error:", error);
     return res.status(500).json({
-      message: "Internal server error",
+      message: "Internal server error.",
       error: error.message,
     });
   }

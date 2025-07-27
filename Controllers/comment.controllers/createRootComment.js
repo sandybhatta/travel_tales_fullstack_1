@@ -45,6 +45,7 @@ const createRootComment = async (req, res) => {
       post: post._id,
       mentions,
       parentComment: null,
+      rootComment: null,
     });
 
     post.comments.push(newComment._id);

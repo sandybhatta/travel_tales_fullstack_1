@@ -1,6 +1,8 @@
 import express from "express"
 import { protect } from "../middlewares/authMiddleware";
 import createRootComment from "../Controllers/comment.controllers/createRootComment";
+import getRootComment from "../Controllers/comment.controllers/getRootComment";
+import replyOfComment from "../Controllers/comment.controllers/replyOfComment";
 
 const router = express.Router();
 
@@ -11,8 +13,11 @@ router.post("/:postId", protect , createRootComment)
 
 
 // reply to a comment or reply to a reply
-router.post("/:postId/:parentCommentId/reply", protect , )
+router.post("/:postId/:rootCommentId/:parentCommentId/reply", protect , replyOfComment)
 
+
+// get root level comments on a post
+router.get("/:postId", protect, getRootComment)
 
 
 
