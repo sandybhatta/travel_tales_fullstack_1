@@ -63,25 +63,7 @@ commentSchema.methods.isLikedBy = function (userId) {
     );
   };
 
-//for toggling comment likes
-commentSchema.methods.toggleLike = async function (userId) {
-    if (!userId) throw new Error("User ID is required");
-  
-    const hasLiked = this.isLikedBy(userId); // 👈 using helper
-  
-    if (hasLiked) {
-      this.likes.pull(userId); // Unlike
-    } else {
-      this.likes.push(userId); // Like
-    }
-  
-    await this.save();
-  
-    return {
-      updatedComment: this,
-      liked: !hasLiked
-    };
-  };
+
   
   //is reply virtual method to send in response
 

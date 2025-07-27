@@ -5,6 +5,7 @@ import getRootComment from "../Controllers/comment.controllers/getRootComment";
 import replyOfComment from "../Controllers/comment.controllers/replyOfComment";
 import getReply from "../Controllers/comment.controllers/getReply";
 import editComment from "../Controllers/comment.controllers/editComment";
+import likeUnlikeComment from "../Controllers/comment.controllers/likeunlikecomment";
 
 const router = express.Router();
 
@@ -32,6 +33,11 @@ router.patch("/:commentId", protect, editComment)
 
 
 
+
+
+
+// like unlike a comment
+router.post(":commentId/like", protect, likeUnlikeComment)
 
 
 export default router

@@ -12,7 +12,20 @@ const getReply = async (req, res) => {
 
     const replies = await Comment.find({ parentComment: parentCommentId })
       .sort({ createdAt: -1 }) 
-      .populate("author", "name username avatar")
+      .populate([
+        {
+          path:"author",
+          select:"name username avatar"
+        },
+        {
+          path:"mentions",
+          select:"name username avatar"
+        },
+        {
+          path:"likes",
+          select:"_id"
+        }
+      ]) 
       .lean();
 
     
