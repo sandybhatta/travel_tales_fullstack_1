@@ -3,6 +3,7 @@ import Post from "../../models/post.js";
 
 const getRootComment = async (req, res) => {
   try {
+    const{user} = req;
     const { postId } = req.params;
 
     const post = await Post.findById(postId).select("_id");
@@ -15,9 +16,10 @@ const getRootComment = async (req, res) => {
       post: post._id,
       parentComment: null,
       rootComment: null,
+      isDeleted:false,
     })
       .sort({ createdAt: -1 }) 
-      .populate("author", "username avatar") 
+      .populate("author", "name username avatar") 
       .lean(); 
 
     if (rootComments.length === 0) {
@@ -33,6 +35,7 @@ const getRootComment = async (req, res) => {
         return {
           ...comment,
           replyCount,
+          isOwner:comment.author._id.equals(user._id)
         };
       })
     );

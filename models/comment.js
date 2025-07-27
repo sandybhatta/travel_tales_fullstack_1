@@ -53,11 +53,11 @@ const commentSchema = new mongoose.Schema(
 );
 
 // Virtual for nested replies
-commentSchema.virtual("replies", {
-  ref: "Comment",
-  localField: "_id",
-  foreignField: "parentComment",
-});
+// commentSchema.virtual("replies", {
+//   ref: "Comment",
+//   localField: "_id",
+//   foreignField: "parentComment",
+// });
 
 
 // is the comment liked by the user

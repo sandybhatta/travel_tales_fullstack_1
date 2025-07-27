@@ -3,6 +3,7 @@ import { protect } from "../middlewares/authMiddleware";
 import createRootComment from "../Controllers/comment.controllers/createRootComment";
 import getRootComment from "../Controllers/comment.controllers/getRootComment";
 import replyOfComment from "../Controllers/comment.controllers/replyOfComment";
+import getReply from "../Controllers/comment.controllers/getReply";
 
 const router = express.Router();
 
@@ -20,7 +21,8 @@ router.post("/:postId/:rootCommentId/:parentCommentId/reply", protect , replyOfC
 router.get("/:postId", protect, getRootComment)
 
 
-
+// get replies of a root comment or replies of replies
+router.get("/:postId/:parentCommentId",protect , getReply)
 
 
 
