@@ -6,6 +6,7 @@ import replyOfComment from "../Controllers/comment.controllers/replyOfComment";
 import getReply from "../Controllers/comment.controllers/getReply";
 import editComment from "../Controllers/comment.controllers/editComment";
 import likeUnlikeComment from "../Controllers/comment.controllers/likeunlikecomment";
+import getListOfLikeOfComment from "../Controllers/comment.controllers/getListOfLikeOfComment";
 
 const router = express.Router();
 
@@ -37,7 +38,9 @@ router.patch("/:commentId", protect, editComment)
 
 
 // like unlike a comment
-router.post(":commentId/like", protect, likeUnlikeComment)
+router.post("/:commentId/like", protect, likeUnlikeComment)
 
 
+// get list of users who liked the comment
+router.get("/:commentId/likes", protect, getListOfLikeOfComment )
 export default router
